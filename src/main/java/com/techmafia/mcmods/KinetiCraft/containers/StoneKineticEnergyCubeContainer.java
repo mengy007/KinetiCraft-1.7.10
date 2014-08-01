@@ -9,8 +9,8 @@ import net.minecraft.item.ItemStack;
 import com.techmafia.mcmods.KinetiCraft.tileentities.BaseKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
 
-public class StoneKineticEnergyCubeContainer extends BaseKineticEnergyContainer {
-
+public class StoneKineticEnergyCubeContainer extends BaseKineticEnergyContainer
+{
 	protected StoneKineticEnergyCubeTileEntity tileEntity;
 	
 	public StoneKineticEnergyCubeContainer(InventoryPlayer inventoryPlayer, StoneKineticEnergyCubeTileEntity te)
