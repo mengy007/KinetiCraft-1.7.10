@@ -5,12 +5,15 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
+import com.techmafia.mcmods.KinetiCraft.containers.IronKineticEnergyCubeContainer;
 import com.techmafia.mcmods.KinetiCraft.containers.KineticFurnaceContainer;
 import com.techmafia.mcmods.KinetiCraft.containers.StoneKineticEnergyCubeContainer;
 import com.techmafia.mcmods.KinetiCraft.containers.WoodenKineticEnergyCubeContainer;
+import com.techmafia.mcmods.KinetiCraft.gui.GuiIronKineticEnergyCube;
 import com.techmafia.mcmods.KinetiCraft.gui.GuiKineticFurnace;
 import com.techmafia.mcmods.KinetiCraft.gui.GuiStoneKineticEnergyCube;
 import com.techmafia.mcmods.KinetiCraft.gui.GuiWoodenKineticEnergyCube;
+import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.KineticFurnaceTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.WoodenKineticEnergyCubeTileEntity;
@@ -32,22 +35,24 @@ public class GuiHandler implements IGuiHandler
 		
 		if (te != null)
 		{
+			LogHelper.info("getServerGuiElement ID: " + ID);
+			
 			if (ID == 0 && te instanceof WoodenKineticEnergyCubeTileEntity)
 			{
-				LogHelper.info("Server opening GUI 0");
 				return new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te);
 			}
 			if (ID == 1 && te instanceof StoneKineticEnergyCubeTileEntity)
 			{
-				LogHelper.info("Server opening GUI 1");
 				return new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te);
-			}	
+			}
+			if (ID == 2 && te instanceof IronKineticEnergyCubeTileEntity)
+			{
+				return new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te);
+			}
 			if (ID == 5 && te instanceof KineticFurnaceTileEntity)
 			{
 				return new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te);
 			}
-			
-			LogHelper.info("Server DID NOT open a GUI - ID: " + ID);
 		}
 		else
 		{
@@ -61,8 +66,12 @@ public class GuiHandler implements IGuiHandler
 	{
 		TileEntity te = world.getTileEntity(x, y, z);
 
+		LogHelper.info("getClientGuiElement ID: " + ID);
+		
 		if (te != null)
 		{
+			LogHelper.info("Tile Entity is there!");
+			
 			if (ID == 0 && te instanceof WoodenKineticEnergyCubeTileEntity)
 			{
 				return new GuiWoodenKineticEnergyCube(new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te));
@@ -70,6 +79,10 @@ public class GuiHandler implements IGuiHandler
 			if (ID == 1 && te instanceof StoneKineticEnergyCubeTileEntity)
 			{
 				return new GuiStoneKineticEnergyCube(new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te));
+			}
+			if (ID == 2 && te instanceof IronKineticEnergyCubeTileEntity)
+			{
+				return new GuiIronKineticEnergyCube(new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te));
 			}
 			if (ID == 5 && te instanceof KineticFurnaceTileEntity)
 			{
