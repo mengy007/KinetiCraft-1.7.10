@@ -1,0 +1,9 @@
+package com.techmafia.mcmods.KinetiCraft.proxy;
+
+public abstract class CommonProxy implements IProxy
+{
+	public void registerTileEntities()
+	{
+		GameRegistry.registerTileEntity(WoodenKineticEnergyCubeTileEntity.class, "WoodenKineticEnergyCubeTileEntity");
+	}
+}

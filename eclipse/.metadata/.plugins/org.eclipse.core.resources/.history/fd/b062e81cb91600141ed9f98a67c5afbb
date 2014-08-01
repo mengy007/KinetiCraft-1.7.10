@@ -1,0 +1,6 @@
+package com.techmafia.mcmods.KinetiCraft.reference;
+
+public class Reference {
+	public static final String MOD_ID = "Mengy007_KinetiCraft";
+	public static final String MOD_NAME	= "KinetiCraft";
+}

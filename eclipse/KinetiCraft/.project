@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>KinetiCraft</name>
+	<comment></comment>
+	<projects>
+		<project>Minecraft</project>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>build.gradle</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Projects/minecraft%201.7.10/source/KinetiCraft/build.gradle</locationURI>
+		</link>
+		<link>
+			<name>resources</name>
+			<type>2</type>
+			<location>/Users/myang/Projects/minecraft 1.7.10/source/KinetiCraft/resources</location>
+		</link>
+		<link>
+			<name>src</name>
+			<type>2</type>
+			<location>/Users/myang/Projects/minecraft 1.7.10/source/KinetiCraft/src</location>
+		</link>
+	</linkedResources>
+</projectDescription>

@@ -1,0 +1,5 @@
+package com.techmafia.mcmods.KinetiCraft.utility;
+
+public class ConfigurationHandler {
+	
+}

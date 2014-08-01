@@ -1,0 +1,193 @@
+package com.techmafia.mcmods.KinetiCraft.items;
+
+import java.util.List;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class WoodenKineticEnergyCore extends KCItem
+{
+	protected IIcon icons[] = new IIcon[6];
+	
+	public WoodenKineticEnergyCore()
+	{
+		super();
+		
+		this.setUnlocalizedName("woodenKineticEnergyCore");
+		
+		this.energyFromJumping = 1;
+		this.energyFromMoving = 2;
+		this.energyFromUsing = 5;
+		this.overChargeBuffer = 10;
+		this.maxEnergy=500;
+		
+		this.setMaxDamage(this.maxEnergy);
+	}
+	
+	/**
+     * Called when a entity tries to play the 'swing' animation.
+     *  
+     * @param entityLiving The entity swinging the item.
+     * @param stack The Item stack
+     * @return True to cancel any further processing by EntityLiving 
+     */
+	@Override
+	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack itemStack)
+    {
+		if (NBTHelper.hasTag(itemStack, "energyStored"))
+		{
+			// Get stored energy level from item stack
+			int energyStored = NBTHelper.getInt(itemStack, "energyStored");
+			
+			// Adds energy from using if max not hit yet
+			if (energyStored < this.maxEnergy)
+			{
+				energyStored += this.energyFromUsing;
+			}
+			
+			if (energyStored > this.maxEnergy) { energyStored = this.maxEnergy; }
+			
+			// Save new energy level to item stack
+			NBTHelper.setInteger(itemStack, "energyStored", energyStored);
+			
+			// Set item damage
+			this.setDamage(itemStack, this.maxEnergy - energyStored);		
+		}
+		
+        return false;
+    }
+	
+	/**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+	@Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer entityPlayer)
+    {		
+        return itemStack;
+    }
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister iconRegister)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			this.icons[i] = iconRegister.registerIcon("KinetiCraft:woodenKineticEnergyCore" + i);
+		}
+		this.itemIcon = icons[0];
+	}
+	
+	// on update
+	public void onUpdate(ItemStack itemStack, World par2World, Entity par3Entity, int par4, boolean inPlayerInv) {
+		EntityPlayer ep = (EntityPlayer)par3Entity;
+		
+		if (prevDistanceWalkedModified == 0) {
+			prevDistanceWalkedModified = ep.distanceWalkedModified;
+		}
+
+		if (itemStack.stackTagCompound == null) {
+			createDefaultNBTTags(itemStack);
+		}
+
+		boolean isMoving = (ep.distanceWalkedModified - prevDistanceWalkedModified > 0) ? true : false;
+		boolean isJumping = (ep.fallDistance > 0) ? true : false;
+		boolean energyGained = false;
+		int energyStored = itemStack.stackTagCompound.getInteger("energyStored");
+		
+		if (!par2World.isRemote)
+		{
+			if (energyStored <= maxEnergy)
+			{
+				if (isMoving)
+				{
+					energyStored += energyFromMoving;
+					energyGained = true;
+				}
+				
+				if (isJumping)
+				{
+					energyStored += energyFromJumping;
+					energyGained = true;
+				}
+				
+				if (energyGained)
+				{
+					if (energyStored > this.maxEnergy) { energyStored = this.maxEnergy; }
+
+					NBTHelper.setInteger(itemStack, "energyStored", energyStored);
+				}
+			}
+			else
+			{
+				if (energyStored > this.maxEnergy)
+				{
+					energyStored = this.maxEnergy;
+					NBTHelper.setInteger(itemStack, "energyStored", energyStored);
+				
+					// Set item damage
+					this.setDamage(itemStack, this.maxEnergy - energyStored);		
+				}
+			}
+		}
+		
+		prevDistanceWalkedModified = ep.distanceWalkedModified;
+		
+		this.setDamage(itemStack, this.maxEnergy - energyStored);
+    }
+	
+	/**
+     * Gets an icon index based on an item's damage value
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIconFromDamage(int damage)
+    {
+    	int level = (this.maxEnergy - damage) / (this.maxEnergy / 5);
+    	
+		if (level > 5) { level = 5; }
+
+		LogHelper.info("DMG: " + damage);
+		
+		if (damage >= this.maxEnergy)
+		{
+			return this.icons[level];
+		}
+		else
+		{
+			return this.itemIcon;
+		}
+    }
+	
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
+	{
+		if (itemStack.stackTagCompound != null)
+		{
+            int energyStored = itemStack.stackTagCompound.getInteger("energyStored");
+            list.add(EnumChatFormatting.GREEN + "" + energyStored + " / " + this.maxEnergy + " RF");
+		}
+	}
+	
+	public void onCreated(ItemStack itemStack, World world, EntityPlayer player)
+	{
+		createDefaultNBTTags(itemStack);
+	}
+	
+	public void createDefaultNBTTags(ItemStack itemStack)
+	{
+		itemStack.stackTagCompound = new NBTTagCompound();
+	    itemStack.stackTagCompound.setInteger("energyStored", 0);
+	}
+}

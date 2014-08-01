@@ -1,0 +1,11 @@
+package com.techmafia.mcmods.KinetiCraft.init;
+
+public class ModItems
+{
+	public static final WoodenKineticEnergyCore woodenKineticEnergyCore;
+	
+	public void init()
+	{
+		
+	}
+}

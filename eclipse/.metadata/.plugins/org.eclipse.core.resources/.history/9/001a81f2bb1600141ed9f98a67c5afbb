@@ -1,0 +1,30 @@
+package com.techmafia.mcmods.KinetiCraft.Configuration;
+
+import java.io.File;
+
+import net.minecraftforge.common.config.Configuration;
+
+public class ConfigurationHandler {
+	public static void init(File configFile)
+	{
+		// Create the config file
+		Configuration configuration = new Configuration(configFile);
+		
+		try
+		{
+			// Load the configuration file
+			configuration.load();
+			
+			// Read config stuff
+		}
+		catch (Exception e)
+		{
+			// Log the exception
+		}
+		finally
+		{
+			// Save configuration file
+			configuration.save();
+		}
+	}
+}

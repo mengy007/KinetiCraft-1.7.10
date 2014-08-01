@@ -1,0 +1,40 @@
+package com.techmafia.mcmods.KinetiCraft.items;
+
+import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
+
+public class StoneKineticEnergyCore extends BaseKineticEnergyCore
+{
+	public StoneKineticEnergyCore()
+	{
+		super();
+		
+		this.setUnlocalizedName("woodenKineticEnergyCore");
+		
+		this.energyFromJumping = 1;
+		this.energyFromMoving = 2;
+		this.energyFromUsing = 5;
+		this.overChargeBuffer = 15;
+		this.maxEnergy=1000;
+		
+		this.setMaxDamage(this.maxEnergy);
+	}
+	
+	@Override
+	protected boolean hasMultipleIcons()
+	{
+		return true;
+	}
+	
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
+	{
+		if (itemStack.stackTagCompound != null)
+		{
+            int energyStored = itemStack.stackTagCompound.getInteger("energyStored");
+            list.add(EnumChatFormatting.GREEN + "" + energyStored + " / " + this.maxEnergy + " RF");
+		}
+	}
+}

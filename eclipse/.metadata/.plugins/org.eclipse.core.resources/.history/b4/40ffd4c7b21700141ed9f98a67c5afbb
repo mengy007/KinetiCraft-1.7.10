@@ -1,0 +1,27 @@
+package com.techmafia.mcmods.KinetiCraft.blocks;
+
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.util.IIcon;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class KineticFurnace extends KCBlock
+{
+	protected IIcon frontIcon;
+	protected IIcon sideIcon;
+	protected IIcon topIcon;
+	
+	public KineticFurnace()
+	{
+		super(Material.rock);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister iconRegister)
+	{
+		blockIcon = iconRegister.registerIcon(String.format("$s", getUnwrappedUnlocalizedName(this.getUnlocalizedName())));
+	}
+
+}

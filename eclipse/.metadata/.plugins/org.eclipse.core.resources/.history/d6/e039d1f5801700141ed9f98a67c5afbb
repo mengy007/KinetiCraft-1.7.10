@@ -1,0 +1,6 @@
+package com.techmafia.mcmods.KinetiCraft.items;
+
+public class StoneKineticEnergyCore extends BaseKineticEnergyCore
+{
+
+}

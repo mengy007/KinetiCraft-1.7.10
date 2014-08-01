@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1265\cocoasubrtf210
+{\fonttbl\f0\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720
+
+\f0\fs22 \cf0 \ul \ulc0 buildscript\ulnone  \{\
+    repositories \{\
+        mavenCentral()\
+        \ul maven\ulnone  \{\
+            name = "forge"\
+            \ul url\ulnone  = "http://files.minecraftforge.net/maven"\
+        \}\
+        \ul maven\ulnone  \{\
+            name = "\ul sonatype\ulnone "\
+            \ul url\ulnone  = "https://oss.sonatype.org/content/repositories/snapshots/"\
+        \}\
+    \}\
+    dependencies \{\
+        \ul classpath\ulnone  'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'\
+    \}\
+\}\
+\
+apply \ul plugin\ulnone : 'forge'\
+\
+version = "1.7.10-1.0"\
+group = "com.pahimar.letsmodreboot" // http://maven.apache.org/guides/mini/guide-naming-conventions.html\
+archivesBaseName = "LetsModReboot"\
+\
+\ul minecraft\ulnone  \{\
+    version = "1.7.10-10.13.0.1179"\
+\}\
+\
+dependencies \{\
+    // you may put jars on which you depend on in ./\ul libs\ulnone \
+    // or you may define them like so..\
+    //compile "some.group:artifact:version:classifier"\
+    //compile "some.group:artifact:version"\
+\
+    // real examples\
+    //compile 'com.mod-buildcraft:buildcraft:6.0.8:\ul dev\ulnone '  // adds \ul buildcraft\ulnone  to the \ul dev\ulnone  \ul env\ulnone \
+    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds \ul ejml\ulnone  to the \ul dev\ulnone  \ul env\ulnone \
+\
+    // for more info...\
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html\
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html\
+\
+\}\
+\
+processResources\
+        \{\
+            // this will ensure that this task is redone when the versions change.\
+            inputs.property "version", project.version\
+            inputs.property "\ul mcversion\ulnone ", project.minecraft.version\
+\
+            // replace stuff in mcmod.info, nothing else\
+            from(sourceSets.main.resources.srcDirs) \{\
+                include 'mcmod.info'\
+\
+                // replace version and \ul mcversion\ulnone \
+                expand 'version': project.version, '\ul mcversion\ulnone ': project.minecraft.version\
+            \}\
+\
+            // copy everything else, thats not the mcmod.info\
+            from(sourceSets.main.resources.srcDirs) \{\
+                exclude 'mcmod.info'\
+            \}\
+        \}}

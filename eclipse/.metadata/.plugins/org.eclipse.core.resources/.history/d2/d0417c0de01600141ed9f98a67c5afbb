@@ -1,0 +1,6 @@
+package com.techmafia.mcmods.KinetiCraft.creativetab;
+
+public class CreativeTabKC
+{
+	public static final CreativeTabs KC_TAB = new CreativeTabs();
+}

@@ -1,0 +1,13 @@
+package com.techmafia.mcmods.KinetiCraft.utility;
+
+import org.apache.logging.log4j.Level;
+
+import com.techmafia.mcmods.KinetiCraft.reference.Reference;
+
+import cpw.mods.fml.common.FMLLog;
+
+public class LogHelper {
+	public static void log(Level logLevel, Object object) {
+		FMLLog.log(Reference.MOD_NAME, logLevel, object)
+	}
+}

@@ -1,0 +1,6 @@
+package com.techmafia.mcmods.KinetiCraft.client.gui;
+
+public class ModGuiConfig extends GuiConfig
+{
+
+}

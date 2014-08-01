@@ -1,0 +1,20 @@
+package com.techmafia.mcmods.KinetiCraft.items;
+
+public class GoldKineticEnergyCube extends BaseKineticEnergyCore
+{
+	public GoldKineticEnergyCube()
+	{
+		super();
+		
+		this.setUnlocalizedName("goldKineticEnergyCore");
+		
+		this.energyFromJumping = 4;
+		this.energyFromMoving = 8;
+		this.energyFromUsing = 15;
+		this.overChargeBuffer = 30;
+		this.maxEnergy=15000;
+		this.hasMultipleIcons=true;
+		
+		this.setMaxDamage(this.maxEnergy);
+	}
+}

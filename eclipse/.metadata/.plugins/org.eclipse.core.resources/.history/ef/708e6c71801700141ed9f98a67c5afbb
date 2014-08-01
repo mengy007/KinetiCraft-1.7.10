@@ -1,0 +1,77 @@
+package com.techmafia.mcmods.KinetiCraft.items;
+
+import java.util.List;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+public class WoodenKineticEnergyCore extends KCItem
+{
+	public WoodenKineticEnergyCore()
+	{
+		super();
+		
+		this.setUnlocalizedName("woodenKineticEnergyCore");
+		
+		this.energyFromJumping = 1;
+		this.energyFromMoving = 2;
+		this.energyFromUsing = 5;
+		this.overChargeBuffer = 10;
+		this.maxEnergy=500;
+		
+		this.setMaxDamage(this.maxEnergy);
+	}
+	
+	@Override
+	protected boolean hasMultipleIcons()
+	{
+		return true;
+	}
+	
+	/**
+     * Gets an icon index based on an item's damage value
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIconFromDamage(int damage)
+    {
+    	int level = (this.maxEnergy - damage) / (this.maxEnergy / 5);
+    	
+		if (level > 5) { level = 5; }
+
+		return this.icons[level];
+    }
+	
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
+	{
+		if (itemStack.stackTagCompound != null)
+		{
+            int energyStored = itemStack.stackTagCompound.getInteger("energyStored");
+            list.add(EnumChatFormatting.GREEN + "" + energyStored + " / " + this.maxEnergy + " RF");
+		}
+	}
+	
+	public void onCreated(ItemStack itemStack, World world, EntityPlayer player)
+	{
+		createDefaultNBTTags(itemStack);
+	}
+	
+	public void createDefaultNBTTags(ItemStack itemStack)
+	{
+		itemStack.stackTagCompound = new NBTTagCompound();
+	    itemStack.stackTagCompound.setInteger("energyStored", 0);
+	}
+}

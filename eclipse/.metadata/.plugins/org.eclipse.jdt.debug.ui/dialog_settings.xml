@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<section name="org.eclipse.jdt.debug.ui.MAIN_METHOD_SELECTION_DIALOG">
+		<item value="true" key="ShowStatusLine"/>
+		<item value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#x0A;&lt;History&gt;&#x0A;&lt;historyRootNode&gt;&#x0A;&lt;infoNode&gt;=Minecraft/\/Users\/myang\/.gradle\/caches\/modules-2\/files-2.1\/net.minecraft\/launchwrapper\/1.9\/116f2aad5b0c68353ebed66cd463517db6522f7e\/launchwrapper-1.9.jar&amp;lt;net.minecraft.launchwrapper(Launch.class[Launch&lt;/infoNode&gt;&#x0A;&lt;infoNode&gt;=Minecraft/\/Users\/myang\/.gradle\/caches\/minecraft\/net\/minecraftforge\/forge\/1.7.10-10.13.0.1180\/start&amp;lt;(GradleStart.class[GradleStart&lt;/infoNode&gt;&#x0A;&lt;infoNode&gt;=Minecraft/\/Users\/myang\/.gradle\/caches\/minecraft\/net\/minecraftforge\/forge\/1.7.10-10.13.0.1180\/start&amp;lt;(GradleStartServer.class[GradleStartServer&lt;/infoNode&gt;&#x0A;&lt;/historyRootNode&gt;&#x0A;&lt;/History&gt;" key="History"/>
+		<section name="DialogBoundsSettings">
+			<item value="600" key="DIALOG_WIDTH"/>
+			<item value="134" key="DIALOG_Y_ORIGIN"/>
+			<item value="46" key="DIALOG_X_ORIGIN"/>
+			<item value="500" key="DIALOG_HEIGHT"/>
+			<item value="1|Lucida Grande|11.0|0|COCOA|1|LucidaGrande" key="DIALOG_FONT_NAME"/>
+		</section>
+	</section>
+</section>

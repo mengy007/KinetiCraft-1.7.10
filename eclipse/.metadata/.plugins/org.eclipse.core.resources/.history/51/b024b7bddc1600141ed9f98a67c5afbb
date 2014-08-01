@@ -1,0 +1,8 @@
+package com.techmafia.mcmods.KinetiCraft.init;
+
+public class ModBlocks
+{
+	public static final WoodenKineticEnergyCube woodenKineticEnergyCube = new WoodenKineticEnergyCube();
+	
+	
+}

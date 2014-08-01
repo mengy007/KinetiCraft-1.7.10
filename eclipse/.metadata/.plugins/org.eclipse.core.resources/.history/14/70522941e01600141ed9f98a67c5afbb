@@ -1,0 +1,13 @@
+package com.techmafia.mcmods.KinetiCraft.creativetab;
+
+import net.minecraft.creativetab.CreativeTabs;
+
+import com.techmafia.mcmods.KinetiCraft.reference.Reference;
+
+public class CreativeTabKC
+{
+	public static final CreativeTabs KC_TAB = new CreativeTabs(Reference.MOD_ID)
+	{
+		
+	};
+}

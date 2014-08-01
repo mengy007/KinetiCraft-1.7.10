@@ -1,0 +1,13 @@
+package com.techmafia.mcmods.KinetiCraft.blocks;
+
+import net.minecraft.block.material.Material;
+
+public class KineticFurnace extends KCBlock
+{
+
+	public KineticFurnace()
+	{
+		super(Material.rock);
+	}
+
+}

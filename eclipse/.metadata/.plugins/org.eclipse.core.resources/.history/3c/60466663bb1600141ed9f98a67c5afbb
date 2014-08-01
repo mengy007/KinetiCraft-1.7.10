@@ -1,0 +1,7 @@
+package com.techmafia.mcmods.KinetiCraft.Configuration;
+
+public class ConfigurationHandler {
+	public static void init(File configFile) {
+		
+	}
+}

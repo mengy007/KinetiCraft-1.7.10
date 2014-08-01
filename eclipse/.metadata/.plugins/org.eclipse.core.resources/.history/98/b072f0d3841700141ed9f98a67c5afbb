@@ -1,0 +1,5 @@
+item.mengy007_kineticraft:woodenKineticEnergyCore.name=Wooden Kinetic Energy Core
+item.mengy007_kineticraft:stoneKineticEnergyCore.name=Stone Kinetic Energy Core
+item.mengy007_kineticraft:ironKineticEnergyCore.name=Iron Kinetic Energy Core
+tile.mengy007_kineticraft:woodenKineticEnergyCube.name=Wooden Kinetic Energy Cube
+itemGroup.mengy007_kinecticraft=KinectiCraft
