@@ -12,6 +12,7 @@ public abstract class CommonProxy implements IProxy
 		GameRegistry.registerTileEntity(WoodenKineticEnergyCubeTileEntity.class, "WoodenKineticEnergyCubeTileEntity");
 		GameRegistry.registerTileEntity(StoneKineticEnergyCubeTileEntity.class, "StoneKineticEnergyCubeTileEntity");
 		GameRegistry.registerTileEntity(IronKineticEnergyCubeTileEntity.class, "IronKineticEnergyCubeTileEntity");
+		GameRegistry.registerTileEntity(GoldKineticEnergyCubeTileEntity.class, "GoldKineticEnergyCubeTileEntity");
 		GameRegistry.registerTileEntity(KineticFurnaceTileEntity.class, "KineticFurnaceTileEntity");
 		
 		LogHelper.info("Done registering tile entities!");

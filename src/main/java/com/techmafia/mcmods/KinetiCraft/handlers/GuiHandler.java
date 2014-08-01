@@ -5,18 +5,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
-import com.techmafia.mcmods.KinetiCraft.containers.IronKineticEnergyCubeContainer;
-import com.techmafia.mcmods.KinetiCraft.containers.KineticFurnaceContainer;
-import com.techmafia.mcmods.KinetiCraft.containers.StoneKineticEnergyCubeContainer;
-import com.techmafia.mcmods.KinetiCraft.containers.WoodenKineticEnergyCubeContainer;
-import com.techmafia.mcmods.KinetiCraft.gui.GuiIronKineticEnergyCube;
-import com.techmafia.mcmods.KinetiCraft.gui.GuiKineticFurnace;
-import com.techmafia.mcmods.KinetiCraft.gui.GuiStoneKineticEnergyCube;
-import com.techmafia.mcmods.KinetiCraft.gui.GuiWoodenKineticEnergyCube;
-import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.KineticFurnaceTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.WoodenKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.containers.*;
+import com.techmafia.mcmods.KinetiCraft.gui.*;
+import com.techmafia.mcmods.KinetiCraft.tileentities.*;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -48,6 +39,10 @@ public class GuiHandler implements IGuiHandler
 			if (ID == 2 && te instanceof IronKineticEnergyCubeTileEntity)
 			{
 				return new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te);
+			}
+			if (ID == 3 && te instanceof GoldKineticEnergyCubeTileEntity)
+			{
+				return new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te);
 			}
 			if (ID == 5 && te instanceof KineticFurnaceTileEntity)
 			{
@@ -83,6 +78,10 @@ public class GuiHandler implements IGuiHandler
 			if (ID == 2 && te instanceof IronKineticEnergyCubeTileEntity)
 			{
 				return new GuiIronKineticEnergyCube(new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te));
+			}
+			if (ID == 3 && te instanceof GoldKineticEnergyCubeTileEntity)
+			{
+				return new GuiGoldKineticEnergyCube(new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te));
 			}
 			if (ID == 5 && te instanceof KineticFurnaceTileEntity)
 			{
