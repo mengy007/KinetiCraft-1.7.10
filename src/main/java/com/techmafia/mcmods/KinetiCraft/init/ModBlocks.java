@@ -10,7 +10,7 @@ public class ModBlocks
 	public static final StoneKineticEnergyCube stoneKineticEnergyCube 		= new StoneKineticEnergyCube();
 	public static final IronKineticEnergyCube ironKineticEnergyCube 		= new IronKineticEnergyCube();
 	public static final GoldKineticEnergyCube goldKineticEnergyCube 		= new GoldKineticEnergyCube();
-	public static final KineticFurnace kineticFurnace 						= new KineticFurnace();
+	//public static final KineticFurnace kineticFurnace 						= new KineticFurnace();
 	
 	public static void init()
 	{
@@ -18,6 +18,6 @@ public class ModBlocks
 		GameRegistry.registerBlock(stoneKineticEnergyCube, "StoneKineticEnergyCube");
 		GameRegistry.registerBlock(ironKineticEnergyCube, "IronKineticEnergyCube");
 		GameRegistry.registerBlock(goldKineticEnergyCube, "GoldKineticEnergyCube");
-		GameRegistry.registerBlock(kineticFurnace, "kineticFurnace");
+		//GameRegistry.registerBlock(kineticFurnace, "kineticFurnace");
 	}
 }

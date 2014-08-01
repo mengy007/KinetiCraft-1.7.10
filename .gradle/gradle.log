@@ -10,13 +10,9 @@ The assetDir is deprecated!  Use runDir instead! runDir set to src/main/java/ass
 :compileApiJava UP-TO-DATE
 :processApiResources UP-TO-DATE
 :apiClasses UP-TO-DATE
-:sourceMainJava
-:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.6
-Note: Some input files use unchecked or unsafe operations.
-Note: Recompile with -Xlint:unchecked for details.
-1 warning
-
-:processResources UP-TO-DATE
+:sourceMainJava UP-TO-DATE
+:compileJava UP-TO-DATE
+:processResources
 :classes
 :jar
 :extractUserDev UP-TO-DATE
@@ -37,4 +33,4 @@ Note: Recompile with -Xlint:unchecked for details.
 
 BUILD SUCCESSFUL
 
-Total time: 14.537 secs
+Total time: 16.134 secs
