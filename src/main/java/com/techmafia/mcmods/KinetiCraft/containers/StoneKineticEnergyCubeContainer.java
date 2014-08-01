@@ -35,14 +35,14 @@ public class StoneKineticEnergyCubeContainer extends BaseKineticEnergyContainer
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (par2 < 1)
+            if (par2 < 2)
             {
-                if (!this.mergeItemStack(itemstack1, 1, this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, 2, this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, 1, false))
+            else if (!this.mergeItemStack(itemstack1, 0, 2, false))
             {
                 return null;
             }

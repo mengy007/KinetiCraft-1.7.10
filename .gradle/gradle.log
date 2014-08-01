@@ -16,13 +16,15 @@ Note: Some input files use unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
 1 warning
 
-:processResources
+:processResources UP-TO-DATE
 :classes
 :jar
 :extractUserDev UP-TO-DATE
 :getAssetsIndex
 :getAssets
-:makeStart SKIPPED
+:makeStartwarning: [options] bootstrap class path not set in conjunction with -source 1.6
+1 warning
+
 :compileTestJava UP-TO-DATE
 :processTestResources UP-TO-DATE
 :testClasses UP-TO-DATE
@@ -35,4 +37,4 @@ Note: Recompile with -Xlint:unchecked for details.
 
 BUILD SUCCESSFUL
 
-Total time: 13.196 secs
+Total time: 14.537 secs

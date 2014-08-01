@@ -37,14 +37,14 @@ public class GoldKineticEnergyCubeContainer extends BaseKineticEnergyContainer
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (par2 < 1)
+            if (par2 < 6)
             {
-                if (!this.mergeItemStack(itemstack1, 1, this.inventorySlots.size(), true))
+                if (!this.mergeItemStack(itemstack1, 6, this.inventorySlots.size(), true))
                 {
                     return null;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 0, 1, false))
+            else if (!this.mergeItemStack(itemstack1, 0, 6, false))
             {
                 return null;
             }
