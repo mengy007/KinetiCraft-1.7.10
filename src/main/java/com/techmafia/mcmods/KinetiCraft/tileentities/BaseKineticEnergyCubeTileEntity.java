@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -16,7 +17,9 @@ import cofh.api.energy.EnergyStorage;
 import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 
+import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
 import com.techmafia.mcmods.KinetiCraft.items.BaseKineticEnergyCore;
+import com.techmafia.mcmods.KinetiCraft.items.EnderKineticEnergyCore;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
@@ -207,9 +210,20 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 								{
 									this.extractEnergy(dirs[index], energyOut, false);
 									energyCore.setItemDamage(energyCore.getItemDamage() + energyOut);
-									NBTHelper.setInteger(energyCore, "energyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
+									NBTHelper.setInteger(energyCore, "kineticEnergyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
 									this.markDirty();
+									
+									Item item = energyCore.getItem();
+									
+									if (item instanceof EnderKineticEnergyCore && NBTHelper.hasTag(energyCore, "ownerUUID"))
+									{
+										KinetiCraft.proxy.drainEnderEnergyUpdate(energyCore, energyLeft - energyOut);
+									}
+									
 									totalEnergySent += energyOut;
+									
+									// Reset overcharge on item
+									NBTHelper.setInteger(energyCore, "overCharge", 0);
 								}
 							}
 						}
@@ -274,7 +288,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 			
 			if (energyCore != null)
 			{
-				totalEnergyStored += NBTHelper.getInt(energyCore, "energyStored");
+				totalEnergyStored += NBTHelper.getInt(energyCore, "kineticEnergyStored");
 			}
 		}
 		

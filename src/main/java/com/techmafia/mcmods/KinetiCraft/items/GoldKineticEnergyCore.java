@@ -8,14 +8,14 @@ public class GoldKineticEnergyCore extends BaseKineticEnergyCore
 		
 		this.setUnlocalizedName("goldKineticEnergyCore");
 		
-		this.energyFromJumping 				= 4;
-		this.energyFromMoving 				= 10;
-		this.energyFromUsing 				= 15;
-		this.overChargeBuffer 				= 5;
-		this.maxEnergy						= 15000;
+		this.energyFromJumping 				= 10;
+		this.energyFromMoving 				= 50;
+		this.energyFromUsing 				= 100;
+		this.overChargeBuffer 				= 10;
+		this.maxEnergy						= 100000;
 		this.hasMultipleIcons				= true;
-		this.damageFromOverChargeExplosion 	= 3.0f;
-		this.maxExtract						= 20;
+		this.damageFromOverChargeExplosion 	= 6.0f;
+		this.maxExtract						= 80;
 		
 		this.setMaxDamage(this.maxEnergy);
 	}

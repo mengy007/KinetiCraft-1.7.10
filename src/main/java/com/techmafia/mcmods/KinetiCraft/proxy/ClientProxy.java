@@ -1,5 +1,10 @@
 package com.techmafia.mcmods.KinetiCraft.proxy;
 
-public class ClientProxy extends CommonProxy {
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+
+import net.minecraft.entity.player.EntityPlayer;
+
+public class ClientProxy extends CommonProxy
+{
 
 }

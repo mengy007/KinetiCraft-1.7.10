@@ -28,23 +28,23 @@ public class GuiHandler implements IGuiHandler
 		{
 			LogHelper.info("getServerGuiElement ID: " + ID);
 			
-			if (ID == 0 && te instanceof WoodenKineticEnergyCubeTileEntity)
+			if (ID == 0)// && te instanceof WoodenKineticEnergyCubeTileEntity)
 			{
 				return new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te);
 			}
-			if (ID == 1 && te instanceof StoneKineticEnergyCubeTileEntity)
+			if (ID == 1)// && te instanceof StoneKineticEnergyCubeTileEntity)
 			{
 				return new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te);
 			}
-			if (ID == 2 && te instanceof IronKineticEnergyCubeTileEntity)
+			if (ID == 2)// && te instanceof IronKineticEnergyCubeTileEntity)
 			{
 				return new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te);
 			}
-			if (ID == 3 && te instanceof GoldKineticEnergyCubeTileEntity)
+			if (ID == 3)// && te instanceof GoldKineticEnergyCubeTileEntity)
 			{
 				return new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te);
 			}
-			if (ID == 5 && te instanceof KineticFurnaceTileEntity)
+			if (ID == 5)// && te instanceof KineticFurnaceTileEntity)
 			{
 				return new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te);
 			}
@@ -67,23 +67,23 @@ public class GuiHandler implements IGuiHandler
 		{
 			LogHelper.info("Tile Entity is there!");
 			
-			if (ID == 0 && te instanceof WoodenKineticEnergyCubeTileEntity)
+			if (ID == 0)// && te instanceof WoodenKineticEnergyCubeTileEntity)
 			{
 				return new GuiWoodenKineticEnergyCube(new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te));
 			}
-			if (ID == 1 && te instanceof StoneKineticEnergyCubeTileEntity)
+			if (ID == 1)// && te instanceof StoneKineticEnergyCubeTileEntity)
 			{
 				return new GuiStoneKineticEnergyCube(new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te));
 			}
-			if (ID == 2 && te instanceof IronKineticEnergyCubeTileEntity)
+			if (ID == 2)// && te instanceof IronKineticEnergyCubeTileEntity)
 			{
 				return new GuiIronKineticEnergyCube(new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te));
 			}
-			if (ID == 3 && te instanceof GoldKineticEnergyCubeTileEntity)
+			if (ID == 3)// && te instanceof GoldKineticEnergyCubeTileEntity)
 			{
 				return new GuiGoldKineticEnergyCube(new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te));
 			}
-			if (ID == 5 && te instanceof KineticFurnaceTileEntity)
+			if (ID == 5)// && te instanceof KineticFurnaceTileEntity)
 			{
 				return new GuiKineticFurnace(new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te));
 			}

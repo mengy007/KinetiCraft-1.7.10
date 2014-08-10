@@ -58,10 +58,10 @@ public class BaseKineticEnergyCore extends Item
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack itemStack)
     {
-		if (NBTHelper.hasTag(itemStack, "energyStored"))
+		if (NBTHelper.hasTag(itemStack, "kineticEnergyStored"))
 		{
 			// Get stored energy level from item stack
-			int energyStored = NBTHelper.getInt(itemStack, "energyStored");
+			int energyStored = NBTHelper.getInt(itemStack, "kineticEnergyStored");
 			
 			// Adds energy from using if max not hit yet
 			if (energyStored < this.maxEnergy)
@@ -101,7 +101,7 @@ public class BaseKineticEnergyCore extends Item
 			if (energyStored > this.maxEnergy) { energyStored = this.maxEnergy; }
 			
 			// Save new energy level to item stack
-			NBTHelper.setInteger(itemStack, "energyStored", energyStored);
+			NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
 			
 			// Set item damage
 			this.setDamage(itemStack, this.maxEnergy - energyStored);		
@@ -136,7 +136,7 @@ public class BaseKineticEnergyCore extends Item
 		boolean isMoving = ep.getAIMoveSpeed() > 0.11f ? true : false;
 		boolean isJumping = (ep.fallDistance > 0.0f) ? true : false;
 		boolean energyGained = false;
-		int energyStored = NBTHelper.getInt(itemStack, "energyStored");
+		int energyStored = NBTHelper.getInt(itemStack, "kineticEnergyStored");
 		
 		if ( ! world.isRemote)
 		{
@@ -158,7 +158,7 @@ public class BaseKineticEnergyCore extends Item
 				{
 					if (energyStored > this.maxEnergy) { energyStored = this.maxEnergy; }
 
-					NBTHelper.setInteger(itemStack, "energyStored", energyStored);
+					NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
 					
 					// play sound if max is hit
 					if (energyStored >= this.maxEnergy)
@@ -172,7 +172,7 @@ public class BaseKineticEnergyCore extends Item
 				if (energyStored > this.maxEnergy)
 				{
 					energyStored = this.maxEnergy;
-					NBTHelper.setInteger(itemStack, "energyStored", energyStored);
+					NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
 				}
 			}
 		}
@@ -180,12 +180,6 @@ public class BaseKineticEnergyCore extends Item
 		prevDistanceWalkedModified = ep.distanceWalkedModified;
 		
 		this.setDamage(itemStack, this.maxEnergy - energyStored);
-		
-		// reset overcharge if item looses full charge
-		if (NBTHelper.hasTag(itemStack, "overCharge") && energyStored < this.maxEnergy)
-		{
-			NBTHelper.setInteger(itemStack, "overCharge", 0);
-		}
     }
 	
 	@Override
@@ -208,7 +202,7 @@ public class BaseKineticEnergyCore extends Item
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				this.icons[i] = iconRegister.registerIcon(Reference.MOD_NAME + ":" + this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(":") + 1) + i);//"KinetiCraft:woodenKineticEnergyCore" + i);
+				this.icons[i] = iconRegister.registerIcon(Reference.MOD_NAME + ":" + this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(":") + 1) + i);
 			}
 			this.itemIcon = icons[0];
 		}
@@ -228,10 +222,7 @@ public class BaseKineticEnergyCore extends Item
     	if (this.hasMultipleIcons)
     	{
         	int level = (this.maxEnergy - damage) / (this.maxEnergy / 5);
-        	
-    		if (level > 5) { level = 5; }
-
-    		return this.icons[level];
+        	return level > 5 ? this.icons[5] : level < 0 ? this.icons[0] : this.icons[level];
     	}
     	else
     	{
@@ -246,13 +237,25 @@ public class BaseKineticEnergyCore extends Item
     	
 		if (itemStack.stackTagCompound != null)
 		{
-            int energyStored = itemStack.stackTagCompound.getInteger("energyStored");
+            int energyStored = itemStack.stackTagCompound.getInteger("kineticEnergyStored");
             list.add(EnumChatFormatting.GREEN + "" + energyStored + " / " + this.maxEnergy + " RF");
+            
+            Item item = itemStack.getItem();
+            if (item instanceof EnderKineticEnergyCore && NBTHelper.hasTag(itemStack, "ownerName"))
+            {
+            	list.add(EnumChatFormatting.RED + "Owner: " + NBTHelper.getString(itemStack, "ownerName"));
+            }
 		}
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName)
 	{
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+	}	
+	
+	@Override
+	public int getDamage(ItemStack itemStack)
+	{
+		return super.getDamage(itemStack);
 	}
 }

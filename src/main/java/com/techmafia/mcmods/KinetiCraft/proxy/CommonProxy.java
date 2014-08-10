@@ -1,5 +1,8 @@
 package com.techmafia.mcmods.KinetiCraft.proxy;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+
 import com.techmafia.mcmods.KinetiCraft.tileentities.*;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
@@ -17,4 +20,8 @@ public abstract class CommonProxy implements IProxy
 		
 		LogHelper.info("Done registering tile entities!");
 	}
+	
+	public void sendEnderEnergyUpdate(int energyStored, EntityPlayer ep) { }
+	
+	public void drainEnderEnergyUpdate(ItemStack itemStack, int energyStored) { }
 }
