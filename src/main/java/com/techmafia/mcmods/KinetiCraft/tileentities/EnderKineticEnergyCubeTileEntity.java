@@ -1,25 +1,37 @@
 package com.techmafia.mcmods.KinetiCraft.tileentities;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import cofh.api.energy.IEnergyHandler;
+
+import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
+import com.techmafia.mcmods.KinetiCraft.items.BaseKineticEnergyCore;
+import com.techmafia.mcmods.KinetiCraft.items.EnderKineticEnergyCore;
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.common.util.ForgeDirection;
 
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
-
-public class GoldKineticEnergyCubeTileEntity extends BaseKineticEnergyCubeTileEntity implements IInventory
+public class EnderKineticEnergyCubeTileEntity  extends BaseKineticEnergyCubeTileEntity implements IInventory
 {
-	public GoldKineticEnergyCubeTileEntity()
+	public EnderKineticEnergyCubeTileEntity()
 	{
 		super();
-		energyCores = new ItemStack[6];
+		energyCores = new ItemStack[9];
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	public void writeToNBT(NBTTagCompound nbt)
 	{
-		super.writeToNBT(par1NBTTagCompound);
+		super.writeToNBT(nbt);
 		
 		NBTTagList nbttaglist = new NBTTagList();
 
@@ -38,15 +50,15 @@ public class GoldKineticEnergyCubeTileEntity extends BaseKineticEnergyCubeTileEn
 			}
 		}
 	
-		par1NBTTagCompound.setTag("Cores", nbttaglist);
+		nbt.setTag("Cores", nbttaglist);
 	}
 
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	public void readFromNBT(NBTTagCompound nbt)
 	{
-		super.readFromNBT(par1NBTTagCompound);
+		super.readFromNBT(nbt);
 	   
-		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Cores", 10);
+		NBTTagList nbttaglist = nbt.getTagList("Cores", 10);
        
 		for (int i = 0; i < nbttaglist.tagCount(); ++i)
 		{
@@ -58,5 +70,5 @@ public class GoldKineticEnergyCubeTileEntity extends BaseKineticEnergyCubeTileEn
 				this.energyCores[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
-	}	
+	}
 }

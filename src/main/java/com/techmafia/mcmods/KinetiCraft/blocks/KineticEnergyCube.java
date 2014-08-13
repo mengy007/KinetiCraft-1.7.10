@@ -14,10 +14,7 @@ import net.minecraft.world.World;
 import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
-import com.techmafia.mcmods.KinetiCraft.tileentities.GoldKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.WoodenKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.*;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 import cpw.mods.fml.relauncher.Side;
@@ -45,22 +42,22 @@ public class KineticEnergyCube extends BlockContainer
 			break;
 		case 2:
 			this.blockName = "stoneKineticEnergyCube";
-			this.blockHardness = 0.2f;
+			this.blockHardness = 0.3f;
 			this.maxCores = 2;
 			break;
 		case 3:
 			this.blockName = "ironKineticEnergyCube";
-			this.blockHardness = 0.3f;
+			this.blockHardness = 0.5f;
 			this.maxCores = 3;
 			break;
 		case 4:
 			this.blockName = "goldKineticEnergyCube";
-			this.blockHardness = 0.4f;
+			this.blockHardness = 0.3f;
 			this.maxCores = 6;
 			break;
 		case 5:
 			this.blockName = "enderKineticEnergyCube";
-			this.blockHardness = 0.3f;
+			this.blockHardness = 0.5f;
 			this.maxCores = 9;
 			break;
 		}
@@ -114,10 +111,10 @@ public class KineticEnergyCube extends BlockContainer
 		case 4:
 			return new GoldKineticEnergyCubeTileEntity();
 		case 5:
+			return new EnderKineticEnergyCubeTileEntity();
 		}
-
-		LogHelper.info("Did not create a tile entity!");
-		return null;
+		
+		return null;		
 	}
 	
 	@Override

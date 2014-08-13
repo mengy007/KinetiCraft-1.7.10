@@ -8,9 +8,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.EnergyStorage;
@@ -131,9 +128,9 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	}
 
 	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
+	public boolean isItemValidForSlot(int i, ItemStack itemStack)
 	{
-		return true;
+		return (itemStack.getItem() instanceof BaseKineticEnergyCore) ? true : false;
 	}
 
 	@Override
@@ -187,7 +184,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 			int totalEnergySent = 0;
 			ItemStack energyCore = this.getStackInSlot(c);
 			
-			if (energyCore != null && energyCore.getItemDamage() < energyCore.getMaxDamage())
+			if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore && energyCore.getItemDamage() < energyCore.getMaxDamage())
 			{			
 				if (hungryTiles.size() > 0)
 				{
@@ -233,6 +230,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 		}
 	}
 	
+	/*
 	@Override
     public Packet getDescriptionPacket()
     {
@@ -240,6 +238,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
         this.writeToNBT(nbt);
         return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
     }
+    */
 
 	/**
      * Called when you receive a TileEntityData packet for the location this
@@ -250,11 +249,13 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
      * @param net The NetworkManager the packet originated from
      * @param pkt The data packet
      */
+	/*
     @Override
     public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
     {
         this.readFromNBT(pkt.func_148857_g());
     }
+    */
 	
 	/**
 	 * CoFH interface

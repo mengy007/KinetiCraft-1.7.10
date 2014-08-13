@@ -27,7 +27,6 @@ public class WoodenKineticEnergyCubeTileEntity extends BaseKineticEnergyCubeTile
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.writeToNBT(par1NBTTagCompound);
-		//this.energy.writeToNBT(par1NBTTagCompound);
 		
 		NBTTagList nbttaglist = new NBTTagList();
 
@@ -53,8 +52,7 @@ public class WoodenKineticEnergyCubeTileEntity extends BaseKineticEnergyCubeTile
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
 		super.readFromNBT(par1NBTTagCompound);
-		//this.energy.readFromNBT(par1NBTTagCompound);
-	   
+		
 		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Cores", 10);
 		this.energyCores = new ItemStack[1];
        
@@ -68,89 +66,5 @@ public class WoodenKineticEnergyCubeTileEntity extends BaseKineticEnergyCubeTile
 				this.energyCores[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
-	}
-	
-	@Override
-	public int getSizeInventory()
-	{
-		return this.energyCores.length;
-	}
-
-	@Override
-	public ItemStack getStackInSlot(int i)
-	{
-		return this.energyCores[i];
-	}
-
-	@Override
-	public ItemStack decrStackSize(int i, int j)
-	{
-		if (this.energyCores[i] != null)
-		{
-			ItemStack itemstack = this.energyCores[i];
-            this.energyCores[i] = null;
-            return itemstack;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	@Override
-	public ItemStack getStackInSlotOnClosing(int i)
-    {
-        if (this.energyCores[i] != null)
-        {
-            ItemStack itemstack = this.energyCores[i];
-            this.energyCores[i] = null;
-            return itemstack;
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-	@Override
-	public void setInventorySlotContents(int i, ItemStack itemstack)
-	{
-		this.energyCores[i] = itemstack;
-
-        if (itemstack != null && itemstack.stackSize > this.getInventoryStackLimit())
-        {
-        	itemstack.stackSize = this.getInventoryStackLimit();
-        }
-		
-	}
-	
-	@Override
-	public int getInventoryStackLimit()
-	{
-		return 1;
-	}
-
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityplayer)
-	{
-		return true;
-	}
-
-	@Override
-	public boolean isItemValidForSlot(int i, ItemStack itemstack)
-	{
-		return true;
-	}
-
-	@Override
-	public String getInventoryName() { return null; }
-
-	@Override
-	public boolean hasCustomInventoryName() { return false;	}
-
-	@Override
-	public void openInventory() { }
-
-	@Override
-	public void closeInventory() { }
+	}	
 }
