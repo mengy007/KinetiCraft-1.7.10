@@ -1,20 +1,18 @@
 package com.techmafia.mcmods.KinetiCraft;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.DataWatcher;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.MinecraftForge;
 
 import com.techmafia.mcmods.KinetiCraft.data.EnderKineticEnergyData;
+import com.techmafia.mcmods.KinetiCraft.data.ExtendedPlayerData;
 import com.techmafia.mcmods.KinetiCraft.handlers.ConfigurationHandler;
 import com.techmafia.mcmods.KinetiCraft.handlers.EnderKineticEnergyDataHandler;
-import com.techmafia.mcmods.KinetiCraft.handlers.EnderKineticEnergyHandler;
-import com.techmafia.mcmods.KinetiCraft.handlers.EnderKineticEnergyServerDataHandler;
+import com.techmafia.mcmods.KinetiCraft.handlers.ExtendedPlayerDataHandler;
+import com.techmafia.mcmods.KinetiCraft.handlers.ExtendedPlayerHandler;
 import com.techmafia.mcmods.KinetiCraft.handlers.GuiHandler;
 import com.techmafia.mcmods.KinetiCraft.init.ModBlocks;
 import com.techmafia.mcmods.KinetiCraft.init.ModItems;
 import com.techmafia.mcmods.KinetiCraft.proxy.CommonProxy;
-import com.techmafia.mcmods.KinetiCraft.proxy.IProxy;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
@@ -48,6 +46,9 @@ public class KinetiCraft
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent preInitEvent)
 	{
+		/* Extended Plauer */
+		MinecraftForge.EVENT_BUS.register(new ExtendedPlayerHandler());
+		
 		/* Config */
 		ConfigurationHandler.init(preInitEvent.getSuggestedConfigurationFile());
 		FMLCommonHandler.instance().bus().register(new ConfigurationHandler());
@@ -64,22 +65,23 @@ public class KinetiCraft
 		/* Register GUI stuff */
 		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new GuiHandler());
 
-		/* Register network packet stuff */
-		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
-		KinetiCraft.network.registerMessage(EnderKineticEnergyDataHandler.class, EnderKineticEnergyData.class, 0, Side.CLIENT);
-
 		LogHelper.info("Pre Initialization Complete!");
 	}
 	
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		MinecraftForge.EVENT_BUS.register(new EnderKineticEnergyHandler());
+		//MinecraftForge.EVENT_BUS.register(new ExtendedPlayer());
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		/* Register network packet stuff */
+		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
+		KinetiCraft.network.registerMessage(EnderKineticEnergyDataHandler.class, EnderKineticEnergyData.class, 0, Side.CLIENT);
+		KinetiCraft.network.registerMessage(ExtendedPlayerDataHandler.class, ExtendedPlayerData.class, 0, Side.CLIENT);
+
 		LogHelper.info("Init event complete.");
 	}
 	

@@ -1,21 +1,31 @@
 package com.techmafia.mcmods.KinetiCraft.blocks;
 
+import java.awt.List;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
-import com.techmafia.mcmods.KinetiCraft.tileentities.*;
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+import com.techmafia.mcmods.KinetiCraft.tileentities.EnderKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.GoldKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.WoodenKineticEnergyCubeTileEntity;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -111,7 +121,11 @@ public class KineticEnergyCube extends BlockContainer
 		case 4:
 			return new GoldKineticEnergyCubeTileEntity();
 		case 5:
-			return new EnderKineticEnergyCubeTileEntity();
+			/*
+			EnderKineticEnergyCubeTileEntity te = new EnderKineticEnergyCubeTileEntity();
+			te.setOwner(Minecraft.getMinecraft().thePlayer.getDisplayName());
+			return te;
+			*/
 		}
 		
 		return null;		
@@ -144,12 +158,21 @@ public class KineticEnergyCube extends BlockContainer
 
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9)
 	{		
     	TileEntity te = world.getTileEntity(x, y, z);
 
+    	if (te != null && te instanceof EnderKineticEnergyCubeTileEntity)
+   		{
+    		if (((EnderKineticEnergyCubeTileEntity)te).getOwner() != Minecraft.getMinecraft().thePlayer.getDisplayName())
+    		{
+    			player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This ender energy cube belongs to " + ((EnderKineticEnergyCubeTileEntity)te).getOwner() + "!"));
+    			return false;
+    		}
+    	}
+    	
     	switch (this.metadata)
     	{
     	case 1:
@@ -175,6 +198,10 @@ public class KineticEnergyCube extends BlockContainer
 	@Override
 	public boolean hasTileEntity(int metadata)
 	{
+		if (this.metadata == 5)
+		{
+			return false;
+		}
 	    return true;
 	}
 	
@@ -188,7 +215,7 @@ public class KineticEnergyCube extends BlockContainer
      */
 	@Override
 	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
-    {
+    {	
         return super.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, metadata);
     }
 }

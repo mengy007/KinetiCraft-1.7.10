@@ -84,17 +84,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	@Override
 	public ItemStack getStackInSlotOnClosing(int i)
     {
-        if (i < this.energyCores.length && this.energyCores[i] != null)
-        {
-            ItemStack itemstack = this.energyCores[i];
-            this.energyCores[i] = null;
-            return itemstack;
-        }
-        else
-        {
-        	LogHelper.error("Invalid index: " + i + " or no core present");
-            return null;
-        }
+		return null;
     }
 
 	@Override

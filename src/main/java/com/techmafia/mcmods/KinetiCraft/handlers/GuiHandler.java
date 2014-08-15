@@ -1,5 +1,6 @@
 package com.techmafia.mcmods.KinetiCraft.handlers;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -17,6 +18,7 @@ import com.techmafia.mcmods.KinetiCraft.gui.GuiIronKineticEnergyCube;
 import com.techmafia.mcmods.KinetiCraft.gui.GuiKineticFurnace;
 import com.techmafia.mcmods.KinetiCraft.gui.GuiStoneKineticEnergyCube;
 import com.techmafia.mcmods.KinetiCraft.gui.GuiWoodenKineticEnergyCube;
+import com.techmafia.mcmods.KinetiCraft.player.ExtendedPlayer;
 import com.techmafia.mcmods.KinetiCraft.tileentities.EnderKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.GoldKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
@@ -36,32 +38,39 @@ public class GuiHandler implements IGuiHandler
 	}
 	
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,	int x, int y, int z)
-	{	
-		TileEntity te = world.getTileEntity(x, y, z);
-		
-		if (te != null)
+	{
+		if (ID == 4)
 		{
-			LogHelper.info("getServerGuiElement ID: " + ID);
-			
-			switch (ID)
-			{
-			case 0:
-				return new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te);
-			case 1:
-				return new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te);
-			case 2:
-				return new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te);
-			case 3:
-				return new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te);
-			case 4:
-				return new EnderKineticEnergyCubeContainer(player.inventory, (EnderKineticEnergyCubeTileEntity)te);
-			case 5:
-				return new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te);
-			}
+			ExtendedPlayer ep = ExtendedPlayer.get(player);
+
+			return new EnderKineticEnergyCubeContainer(player.inventory, ep.inventory);
 		}
 		else
 		{
-			LogHelper.error("Server: No tile entity found at " + x + "," + y + "," + z + ".");
+			TileEntity te = world.getTileEntity(x, y, z);
+			
+			if (te != null)
+			{
+				LogHelper.info("getServerGuiElement ID: " + ID);
+				
+				switch (ID)
+				{
+				case 0:
+					return new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te);
+				case 1:
+					return new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te);
+				case 2:
+					return new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te);
+				case 3:
+					return new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te);
+				case 5:
+					return new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te);
+				}
+			}
+			else
+			{
+				LogHelper.error("Server: No tile entity found at " + x + "," + y + "," + z + ".");
+			}
 		}
 		
 		return null;
@@ -69,33 +78,40 @@ public class GuiHandler implements IGuiHandler
 
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
 	{
-		TileEntity te = world.getTileEntity(x, y, z);
-
-		LogHelper.info("getClientGuiElement ID: " + ID);
-		
-		if (te != null)
+		if (ID == 4)
 		{
-			LogHelper.info("Tile Entity is there!");
+			ExtendedPlayer ep = ExtendedPlayer.get(player);
 			
-			switch (ID)
-			{
-			case 0:
-				return new GuiWoodenKineticEnergyCube(new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te));
-			case 1:
-				return new GuiStoneKineticEnergyCube(new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te));
-			case 2:
-				return new GuiIronKineticEnergyCube(new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te));
-			case 3:
-				return new GuiGoldKineticEnergyCube(new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te));
-			case 4:
-				return new GuiEnderKineticEnergyCube(new EnderKineticEnergyCubeContainer(player.inventory, (EnderKineticEnergyCubeTileEntity)te));
-			case 5:
-				return new GuiKineticFurnace(new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te));
-			}
+			return new GuiEnderKineticEnergyCube(new EnderKineticEnergyCubeContainer(player.inventory, ep.inventory));
 		}
 		else
 		{
-			LogHelper.error("Client: No tile entity found at " + x + "," + y + "," + z + ".");
+			TileEntity te = world.getTileEntity(x, y, z);
+	
+			LogHelper.info("getClientGuiElement ID: " + ID);
+			
+			if (te != null)
+			{
+				LogHelper.info("Tile Entity is there!");
+				
+				switch (ID)
+				{
+				case 0:
+					return new GuiWoodenKineticEnergyCube(new WoodenKineticEnergyCubeContainer(player.inventory, (WoodenKineticEnergyCubeTileEntity)te));
+				case 1:
+					return new GuiStoneKineticEnergyCube(new StoneKineticEnergyCubeContainer(player.inventory, (StoneKineticEnergyCubeTileEntity)te));
+				case 2:
+					return new GuiIronKineticEnergyCube(new IronKineticEnergyCubeContainer(player.inventory, (IronKineticEnergyCubeTileEntity)te));
+				case 3:
+					return new GuiGoldKineticEnergyCube(new GoldKineticEnergyCubeContainer(player.inventory, (GoldKineticEnergyCubeTileEntity)te));
+				case 5:
+					return new GuiKineticFurnace(new KineticFurnaceContainer(player.inventory, (KineticFurnaceTileEntity)te));
+				}
+			}
+			else
+			{
+				LogHelper.error("Client: No tile entity found at " + x + "," + y + "," + z + ".");
+			}
 		}
 		
 		return null;
