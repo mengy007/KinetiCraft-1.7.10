@@ -26,6 +26,7 @@ import com.techmafia.mcmods.KinetiCraft.tileentities.GoldKineticEnergyCubeTileEn
 import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.WoodenKineticEnergyCubeTileEntity;
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -121,11 +122,13 @@ public class KineticEnergyCube extends BlockContainer
 		case 4:
 			return new GoldKineticEnergyCubeTileEntity();
 		case 5:
-			/*
 			EnderKineticEnergyCubeTileEntity te = new EnderKineticEnergyCubeTileEntity();
-			te.setOwner(Minecraft.getMinecraft().thePlayer.getDisplayName());
+			te.setOwnerUUID(Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
+			te.setOwnerName(Minecraft.getMinecraft().thePlayer.getDisplayName());
+			
+			LogHelper.info("Setting owner - " + Minecraft.getMinecraft().thePlayer.getUniqueID().toString() + " : " + Minecraft.getMinecraft().thePlayer.getDisplayName());
+			
 			return te;
-			*/
 		}
 		
 		return null;		
@@ -166,9 +169,11 @@ public class KineticEnergyCube extends BlockContainer
 
     	if (te != null && te instanceof EnderKineticEnergyCubeTileEntity)
    		{
-    		if (((EnderKineticEnergyCubeTileEntity)te).getOwner() != Minecraft.getMinecraft().thePlayer.getDisplayName())
+    		LogHelper.info("UUID: " + player.getUniqueID().toString());
+    		
+    		if ( ! ((EnderKineticEnergyCubeTileEntity)te).getOwnerUUID().toString().equals(player.getUniqueID().toString()))
     		{
-    			player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This ender energy cube belongs to " + ((EnderKineticEnergyCubeTileEntity)te).getOwner() + "!"));
+    			player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This ender energy cube belongs to " + ((EnderKineticEnergyCubeTileEntity)te).getOwnerName() + "!"));
     			return false;
     		}
     	}
@@ -198,10 +203,6 @@ public class KineticEnergyCube extends BlockContainer
 	@Override
 	public boolean hasTileEntity(int metadata)
 	{
-		if (this.metadata == 5)
-		{
-			return false;
-		}
 	    return true;
 	}
 	
