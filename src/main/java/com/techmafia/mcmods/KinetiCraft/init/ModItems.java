@@ -72,7 +72,6 @@ public class ModItems
 			'C', new ItemStack(ironKineticEnergyCore, 1 ,OreDictionary.WILDCARD_VALUE)
 		});
 		/*
-		// Disabled due to huge bug
 		GameRegistry.addRecipe(new ItemStack(enderKineticEnergyCore, 1), new Object[]{
 			" G ",
 			"GEG",

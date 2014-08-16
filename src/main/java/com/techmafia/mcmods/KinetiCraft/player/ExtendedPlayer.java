@@ -1,15 +1,14 @@
 package com.techmafia.mcmods.KinetiCraft.player;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import cofh.api.energy.EnergyStorage;
 
 import com.techmafia.mcmods.KinetiCraft.inventory.EnderKineticEnergyCubeInventory;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
@@ -20,6 +19,7 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 	public final static String EXT_PROP_NAME = Reference.MOD_ID + "_ExtenedPlayer";
 	private final EntityPlayer player;
 	public EnderKineticEnergyCubeInventory inventory = new EnderKineticEnergyCubeInventory();
+	public int enderEnergy;
 	
 	public ExtendedPlayer()
 	{
@@ -44,6 +44,9 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 	@Override
 	public void saveNBTData(NBTTagCompound nbt)
 	{
+		/*
+		 * Save Ender Inventory
+		 */
 		NBTTagList nbttaglist = new NBTTagList();
 
 		for (int i = 0; i < this.inventory.energyCores.length; ++i)
@@ -64,12 +67,20 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		}
 	
 		nbt.setTag(this.EXT_PROP_NAME, nbttaglist);
+		
+		/*
+		 * Save Ender Energy
+		 */
+		LogHelper.info("EE: " + this.enderEnergy);
+		nbt.setInteger("enderEnergy", this.enderEnergy);
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound nbt)
 	{
-		ExtendedPlayer ep = ExtendedPlayer.get(this.player);		
+		/*
+		 * Load Ender Inventory
+		 */
 		NBTTagList nbttaglist = nbt.getTagList(this.EXT_PROP_NAME, 10);
 	       
 		for (int i = 0; i < nbttaglist.tagCount(); ++i)
@@ -83,6 +94,11 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 				this.inventory.energyCores[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
+		
+		/*
+		 * Load Ender Energy
+		 */
+		this.enderEnergy = nbt.getInteger("enderEnergy");
 	}
 
 	@Override

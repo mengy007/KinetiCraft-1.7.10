@@ -1,7 +1,5 @@
 package com.techmafia.mcmods.KinetiCraft.items;
 
-import cofh.api.energy.EnergyStorage;
-
 public class WoodenKineticEnergyCore extends BaseKineticEnergyCore
 {
 	public WoodenKineticEnergyCore()

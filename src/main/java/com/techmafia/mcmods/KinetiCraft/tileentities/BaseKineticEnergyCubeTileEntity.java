@@ -25,6 +25,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	protected ItemStack[] energyCores;
 	protected EnergyStorage energy = new EnergyStorage(0);
 	protected int tickDirection = 0;
+	public boolean canEmitPower = true;
 	
 	public BaseKineticEnergyCubeTileEntity()
 	{
@@ -138,79 +139,82 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	@Override
 	public void updateEntity()
 	{
-		ArrayList <Integer> hungryTiles = new ArrayList <Integer>();
-		
-		TileEntity tes[] = new TileEntity[6];
-		ForgeDirection dirs[] = new ForgeDirection[6];
-		
-		tes[0] = this.worldObj.getTileEntity(this.xCoord-1, this.yCoord, this.zCoord); // WEST
-		tes[1] = this.worldObj.getTileEntity(this.xCoord+1, this.yCoord, this.zCoord); // EAST
-		tes[2] = this.worldObj.getTileEntity(this.xCoord, this.yCoord-1, this.zCoord); // DOWN
-		tes[3] = this.worldObj.getTileEntity(this.xCoord, this.yCoord+1, this.zCoord); // UP
-		tes[4] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord-1); // SOUTH
-		tes[5] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord+1); // NORTH
-		
-		dirs[0] = ForgeDirection.WEST;
-		dirs[1] = ForgeDirection.EAST;
-		dirs[2] = ForgeDirection.DOWN;
-		dirs[3] = ForgeDirection.UP;
-		dirs[4] = ForgeDirection.SOUTH;
-		dirs[5] = ForgeDirection.NORTH;
-		
-		/* Gather all tiles that want energy */
-		for (int i=0; i<6; i++)
+		if (this.canEmitPower)
 		{
-			if (tes[i] != null && tes[i] instanceof IEnergyHandler)
+			ArrayList <Integer> hungryTiles = new ArrayList <Integer>();
+			
+			TileEntity tes[] = new TileEntity[6];
+			ForgeDirection dirs[] = new ForgeDirection[6];
+			
+			tes[0] = this.worldObj.getTileEntity(this.xCoord-1, this.yCoord, this.zCoord); // WEST
+			tes[1] = this.worldObj.getTileEntity(this.xCoord+1, this.yCoord, this.zCoord); // EAST
+			tes[2] = this.worldObj.getTileEntity(this.xCoord, this.yCoord-1, this.zCoord); // DOWN
+			tes[3] = this.worldObj.getTileEntity(this.xCoord, this.yCoord+1, this.zCoord); // UP
+			tes[4] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord-1); // SOUTH
+			tes[5] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord+1); // NORTH
+			
+			dirs[0] = ForgeDirection.WEST;
+			dirs[1] = ForgeDirection.EAST;
+			dirs[2] = ForgeDirection.DOWN;
+			dirs[3] = ForgeDirection.UP;
+			dirs[4] = ForgeDirection.SOUTH;
+			dirs[5] = ForgeDirection.NORTH;
+			
+			/* Gather all tiles that want energy */
+			for (int i=0; i<6; i++)
 			{
-				if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+				if (tes[i] != null && tes[i] instanceof IEnergyHandler)
 				{
-					hungryTiles.add(i);
+					if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+					{
+						hungryTiles.add(i);
+					}
 				}
 			}
-		}
-		
-		for (int c = 0; c < this.energyCores.length; c++)
-		{
-			int totalEnergySent = 0;
-			ItemStack energyCore = this.getStackInSlot(c);
 			
-			if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore && energyCore.getItemDamage() < energyCore.getMaxDamage())
-			{			
-				if (hungryTiles.size() > 0)
-				{
-					int energyLeft = energyCore.getMaxDamage() - energyCore.getItemDamage();
-					int maxExtract = ((BaseKineticEnergyCore)energyCore.getItem()).getMaxExtract();
-					int energyToExtract = energyLeft < maxExtract ? energyLeft : maxExtract;
-					int energyPerTile = energyToExtract / hungryTiles.size();
-					
-					for (Iterator <Integer> te = hungryTiles.iterator(); te.hasNext(); )
-					{	
-						int index = te.next();
+			for (int c = 0; c < this.energyCores.length; c++)
+			{
+				int totalEnergySent = 0;
+				ItemStack energyCore = this.getStackInSlot(c);
+				
+				if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore && energyCore.getItemDamage() < energyCore.getMaxDamage())
+				{			
+					if (hungryTiles.size() > 0)
+					{
+						int energyLeft = energyCore.getMaxDamage() - energyCore.getItemDamage();
+						int maxExtract = ((BaseKineticEnergyCore)energyCore.getItem()).getMaxExtract();
+						int energyToExtract = energyLeft < maxExtract ? energyLeft : maxExtract;
+						int energyPerTile = energyToExtract / hungryTiles.size();
 						
-						if (energyToExtract > 0)
-						{
-							if (totalEnergySent < maxExtract)
+						for (Iterator <Integer> te = hungryTiles.iterator(); te.hasNext(); )
+						{	
+							int index = te.next();
+							
+							if (energyToExtract > 0)
 							{
-								int energyOut = totalEnergySent + energyPerTile > maxExtract ? maxExtract - totalEnergySent : ((IEnergyHandler)tes[index]).receiveEnergy(dirs[index].getOpposite(), energyPerTile, false);
-								
-								if (energyOut > 0)
+								if (totalEnergySent < maxExtract)
 								{
-									this.extractEnergy(dirs[index], energyOut, false);
-									energyCore.setItemDamage(energyCore.getItemDamage() + energyOut);
-									NBTHelper.setInteger(energyCore, "kineticEnergyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
-									this.markDirty();
+									int energyOut = totalEnergySent + energyPerTile > maxExtract ? maxExtract - totalEnergySent : ((IEnergyHandler)tes[index]).receiveEnergy(dirs[index].getOpposite(), energyPerTile, false);
 									
-									Item item = energyCore.getItem();
-									
-									if (item instanceof EnderKineticEnergyCore && NBTHelper.hasTag(energyCore, "ownerUUID"))
+									if (energyOut > 0)
 									{
-										KinetiCraft.proxy.drainEnderEnergyUpdate(energyCore, energyLeft - energyOut);
+										this.extractEnergy(dirs[index], energyOut, false);
+										energyCore.setItemDamage(energyCore.getItemDamage() + energyOut);
+										NBTHelper.setInteger(energyCore, "kineticEnergyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
+										this.markDirty();
+										
+										Item item = energyCore.getItem();
+										
+										if (item instanceof EnderKineticEnergyCore && NBTHelper.hasTag(energyCore, "ownerUUID"))
+										{
+											KinetiCraft.proxy.drainEnderEnergyUpdate(energyCore, energyLeft - energyOut);
+										}
+										
+										totalEnergySent += energyOut;
+										
+										// Reset overcharge on item
+										NBTHelper.setInteger(energyCore, "overCharge", 0);
 									}
-									
-									totalEnergySent += energyOut;
-									
-									// Reset overcharge on item
-									NBTHelper.setInteger(energyCore, "overCharge", 0);
 								}
 							}
 						}

@@ -11,12 +11,6 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks
 {
-	/*
-	public static final WoodenKineticEnergyCube woodenKineticEnergyCube 	= new WoodenKineticEnergyCube();
-	public static final StoneKineticEnergyCube stoneKineticEnergyCube 		= new StoneKineticEnergyCube();
-	public static final IronKineticEnergyCube ironKineticEnergyCube 		= new IronKineticEnergyCube();
-	public static final GoldKineticEnergyCube goldKineticEnergyCube 		= new GoldKineticEnergyCube();
-	*/
 	public static final KineticEnergyCube woodenKineticEnergyCube 	= new KineticEnergyCube(1);
 	public static final KineticEnergyCube stoneKineticEnergyCube 	= new KineticEnergyCube(2);
 	public static final KineticEnergyCube ironKineticEnergyCube 	= new KineticEnergyCube(3);

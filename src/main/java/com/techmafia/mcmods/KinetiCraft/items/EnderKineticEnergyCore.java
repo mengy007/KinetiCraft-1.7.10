@@ -1,15 +1,20 @@
 package com.techmafia.mcmods.KinetiCraft.items;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
 import com.techmafia.mcmods.KinetiCraft.entities.EnderKineticEnergy;
+import com.techmafia.mcmods.KinetiCraft.player.ExtendedPlayer;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
@@ -29,8 +34,6 @@ public class EnderKineticEnergyCore extends BaseKineticEnergyCore
 		this.hasMultipleIcons				= true;
 		this.damageFromOverChargeExplosion 	= 6.0f;
 		this.maxExtract						= 10000;
-		
-		this.setMaxDamage(this.maxEnergy);
 	}
 	
 	public int getMaxExtract()
@@ -41,55 +44,12 @@ public class EnderKineticEnergyCore extends BaseKineticEnergyCore
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack itemStack)
     {
-		EnderKineticEnergy eke = EnderKineticEnergy.get((EntityPlayer)entityLiving);
-		boolean isServer = false;
-		int energyStored = 0;
+		ExtendedPlayer ep = ExtendedPlayer.get((EntityPlayer)entityLiving);
 		
-		if (entityLiving instanceof EntityPlayerMP)
-		{
-			isServer = true;
-		}
+		LogHelper.info("Current EE: " + ep.enderEnergy);
 		
-		if (isServer)
-		{
-			energyStored = eke.getEnergy();
-			NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
-			itemStack.setItemDamage(this.maxEnergy - energyStored);
-		}
-		else
-		{
-			energyStored = NBTHelper.getInt(itemStack, "kineticEnergyStored");
-		}
-		
-		// Adds energy from using if max not hit yet
-		if (energyStored < this.maxEnergy)
-		{
-			energyStored += this.energyFromUsing;
-		}
-			
-		if (energyStored > this.maxEnergy)
-		{
-			entityLiving.playSound("random.orb", 1, 1);
-			energyStored = this.maxEnergy;
-		}
-		
-		// Save new energy level to item stack
-		if (isServer)
-		{
-			eke.setEnergy(energyStored);
-		}
-		NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
-		this.setDamage(itemStack, this.maxEnergy - energyStored);
-		
-		KinetiCraft.proxy.sendEnderEnergyUpdate(energyStored, (EntityPlayer) entityLiving);
-		
-		/* Set owner if not set */
-		if ( ! NBTHelper.hasTag(itemStack, "ownerUUID"))
-		{
-			NBTHelper.setString(itemStack, "ownerUUID", Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
-			NBTHelper.setString(itemStack, "ownerName", Minecraft.getMinecraft().thePlayer.getDisplayName());
-		}
-		
+		ep.enderEnergy += this.energyFromUsing;
+
         return false;
     }
 	
@@ -101,93 +61,38 @@ public class EnderKineticEnergyCore extends BaseKineticEnergyCore
 	{
 		super.onUpdate(itemStack, world, entity, par4, inPlayerInv);
 
-		EntityPlayer ep = (EntityPlayer)entity;
-		int energyStored;
-		boolean isServer = false;
-		EnderKineticEnergy eke = EnderKineticEnergy.get(ep);
-		
-		if (entity instanceof EntityPlayerMP)
-		{
-			isServer = true;
-		}
-		
-		if (isServer)
-		{
-			energyStored = eke.getEnergy();			
-			NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
-			itemStack.setItemDamage(this.maxEnergy - energyStored);
-		}
-		else
-		{
-			energyStored = NBTHelper.getInt(itemStack, "kineticEnergyStored");
-		}
+		ExtendedPlayer ep = ExtendedPlayer.get((EntityPlayer)entity);
+		EntityPlayer entityPlayer = (EntityPlayer)entity;
 		
 		if (prevDistanceWalkedModified == 0)
 		{
-			prevDistanceWalkedModified = ep.distanceWalkedModified;
+			prevDistanceWalkedModified = entityPlayer.distanceWalkedModified;
 		}
 		
-		boolean isMoving = ep.getAIMoveSpeed() > 0.11f ? true : false;
-		boolean isJumping = (ep.fallDistance > 0.0f) ? true : false;
+		boolean isMoving = entityPlayer.getAIMoveSpeed() > 0.11f ? true : false;
+		boolean isJumping = entityPlayer.fallDistance > 0.0f ? true : false;
 		boolean energyGained = false;
 		
-		if ( ! world.isRemote)
+		if (isMoving)
 		{
-			if (energyStored <= this.maxEnergy)
-			{
-				if (isMoving)
-				{
-					energyStored += energyFromMoving;
-					energyGained = true;
-				}
-				
-				if (isJumping)
-				{
-					energyStored += energyFromJumping;
-					energyGained = true;
-				}
-				
-				if (energyGained)
-				{
-					if (energyStored > this.maxEnergy)
-					{
-						entity.playSound("random.orb", 1, 1);
-						energyStored = this.maxEnergy;
-					}
-
-					if (isServer)
-					{
-						eke.setEnergy(energyStored);
-					}
-					NBTHelper.setInteger(itemStack, "kineticEnergyStored", energyStored);
-					itemStack.setItemDamage(this.maxEnergy - energyStored);
-				}
-			}
+			ep.enderEnergy += energyFromMoving;
+			energyGained = true;
 		}
 		
-		prevDistanceWalkedModified = ep.distanceWalkedModified;
+		if (isJumping)
+		{
+			ep.enderEnergy += energyFromJumping;
+			energyGained = true;
+		}
 		
-		this.setDamage(itemStack, this.maxEnergy - energyStored);
-
-		KinetiCraft.proxy.sendEnderEnergyUpdate(energyStored, ep);
+		prevDistanceWalkedModified = entityPlayer.distanceWalkedModified;
     }
 	
-	/**
-	 * Overridden to use ExtendedEntity data for player
-	 */
 	@Override
-	public int getDamage(ItemStack itemStack)
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
 	{
-		EnderKineticEnergy eke = EnderKineticEnergy.get(Minecraft.getMinecraft().thePlayer);
+		ExtendedPlayer ep = ExtendedPlayer.get(player);
 		
-		if (eke != null)
-		{
-			return this.maxEnergy - eke.getEnergy();
-		}
-		else
-		{
-			return this.getDamage(itemStack);
-		}
-		//return super.getDamage(itemStack);
+       	list.add(EnumChatFormatting.GREEN + "" + ep.enderEnergy + " RF");
 	}
 }
