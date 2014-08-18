@@ -5,19 +5,22 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
-import com.techmafia.mcmods.KinetiCraft.blocks.*;
+import com.techmafia.mcmods.KinetiCraft.blocks.KineticEnergyCube;
+import com.techmafia.mcmods.KinetiCraft.blocks.KineticEnergyConduit;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks
 {
-	public static final KineticEnergyCube woodenKineticEnergyCube 	= new KineticEnergyCube(1);
-	public static final KineticEnergyCube stoneKineticEnergyCube 	= new KineticEnergyCube(2);
-	public static final KineticEnergyCube ironKineticEnergyCube 	= new KineticEnergyCube(3);
-	public static final KineticEnergyCube goldKineticEnergyCube 	= new KineticEnergyCube(4);
-	public static final KineticEnergyCube enderKineticEnergyCube 	= new KineticEnergyCube(5);
+	public static final KineticEnergyCube woodenKineticEnergyCube 		= new KineticEnergyCube(1);
+	public static final KineticEnergyCube stoneKineticEnergyCube 		= new KineticEnergyCube(2);
+	public static final KineticEnergyCube ironKineticEnergyCube 		= new KineticEnergyCube(3);
+	public static final KineticEnergyCube goldKineticEnergyCube 		= new KineticEnergyCube(4);
+	public static final KineticEnergyCube enderKineticEnergyCube 		= new KineticEnergyCube(5);
 	
-	//public static final KineticFurnace kineticFurnace 						= new KineticFurnace();
+	public static final KineticEnergyConduit woodenKineticEnergyConduit	= new KineticEnergyConduit(1);
+	
+	//public static final KineticFurnace kineticFurnace 				= new KineticFurnace();
 	
 	public static void init()
 	{
@@ -26,6 +29,9 @@ public class ModBlocks
 		GameRegistry.registerBlock(ironKineticEnergyCube, "IronKineticEnergyCube");
 		GameRegistry.registerBlock(goldKineticEnergyCube, "GoldKineticEnergyCube");
 		GameRegistry.registerBlock(enderKineticEnergyCube, "EnderKineticEnergyCube");
+		
+		GameRegistry.registerBlock(woodenKineticEnergyConduit, "woodenKineticEnergyConduit");
+		
 		//GameRegistry.registerBlock(kineticFurnace, "kineticFurnace");
 		
 		/* Blocks Crafting Recipes */
@@ -68,6 +74,13 @@ public class ModBlocks
 			'W', Items.ender_pearl,
 			'O', Blocks.obsidian,
 			'R', Items.redstone
+		});
+		
+		/* Energy Conduits */
+		GameRegistry.addRecipe(new ItemStack(woodenKineticEnergyConduit, 3), new Object[]{
+			"WBW",
+			'W', Blocks.planks,
+			'B', Blocks.stone_button 
 		});
 	}
 }

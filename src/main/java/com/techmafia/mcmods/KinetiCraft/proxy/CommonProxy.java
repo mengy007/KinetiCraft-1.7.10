@@ -22,6 +22,8 @@ public abstract class CommonProxy implements IProxy
 		LogHelper.info("Done registering tile entities!");
 	}
 	
+	public void registerClientStuff() { }
+	
 	public void sendEnderEnergyUpdate(int energyStored, EntityPlayer ep) { }
 	
 	public void drainEnderEnergyUpdate(ItemStack itemStack, int energyStored) { }

@@ -62,8 +62,11 @@ public class KinetiCraft
 		/* Register tile entities */
 		proxy.registerTileEntities();
 		
+		/* Regiister client stuff */
+		proxy.registerClientStuff();
+		
 		/* Register GUI stuff */
-		NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new GuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(KinetiCraft.instance, new GuiHandler());
 
 		LogHelper.info("Pre Initialization Complete!");
 	}
@@ -78,7 +81,7 @@ public class KinetiCraft
 	public void init(FMLInitializationEvent event)
 	{
 		/* Register network packet stuff */
-		this.network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
+		KinetiCraft.network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
 		KinetiCraft.network.registerMessage(EnderKineticEnergyDataHandler.class, EnderKineticEnergyData.class, 0, Side.CLIENT);
 		KinetiCraft.network.registerMessage(ExtendedPlayerDataHandler.class, ExtendedPlayerData.class, 0, Side.CLIENT);
 
