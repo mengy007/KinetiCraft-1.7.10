@@ -24,20 +24,91 @@ public class KineticEnergyConduitTileEntityRenderer extends TileEntitySpecialRen
 		this.bindTexture(this.texture);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		{
-			this.drawCore(tileEntity);
-			
 			KineticEnergyConduitTileEntity conduit = (KineticEnergyConduitTileEntity) tileEntity;
-			for (int i = 0; i < 6; i++)
+
+			if ( ! conduit.onlyOneOpposite(conduit.connections))
 			{
-				if (conduit.connections[i] != null)
+				this.drawCore(tileEntity);
+				
+				for (int i = 0; i < 6; i++)
 				{
-					this.drawConnector(conduit.connections[i]);
+					if (conduit.connections[i] != null)
+					{
+						this.drawConnector(conduit.connections[i]);
+					}
 				}
+
 			}
+			else
+			{
+				for (int i = 0; i < conduit.connections.length; i++)
+				{
+					if (conduit.connections[i] != null)
+					{
+						this.drawStraight(conduit.connections[i]);
+						break;
+					}
+				}
+			}			
 		}
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glTranslated(-translationX, -translationY, -translationZ);
+	}
+	
+	public void drawStraight(ForgeDirection dir)
+	{
+		Tessellator tes = Tessellator.instance;
+		
+		tes.startDrawingQuads();
+		{
+			GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+			
+			if (dir == ForgeDirection.SOUTH || dir == ForgeDirection.NORTH)
+			{
+				GL11.glRotatef(90, 1, 0, 0);
+			}
+			else if (dir == ForgeDirection.WEST || dir == ForgeDirection.EAST)
+			{
+				GL11.glRotatef(90, 0, 0, 1);
+			}
+
+			GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
+			
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);
+
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+		
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);		
+
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);		
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+		}
+		tes.draw();
+		
+		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+		
+		if (dir == ForgeDirection.SOUTH || dir == ForgeDirection.NORTH)
+		{
+			GL11.glRotatef(-90, 1, 0, 0);
+		}
+		else if (dir == ForgeDirection.WEST || dir == ForgeDirection.EAST)
+		{
+			GL11.glRotatef(-90, 0, 0, 1);
+		}
+
+		GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 	}
 	
 	public void drawConnector(ForgeDirection dir)
