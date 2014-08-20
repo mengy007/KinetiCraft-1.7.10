@@ -1,12 +1,28 @@
 package com.techmafia.mcmods.KinetiCraft.tileentities;
 
+import java.util.ArrayList;
+
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
 
-public class KineticEnergyConduitTileEntity extends TileEntity
+public class KineticEnergyConduitTileEntity extends TileEntity implements IEnergyHandler
 {
 	private int type = 0;
+	private boolean powerSourceConnected = false;
+	private ArrayList <PowerSource> powerSources = new ArrayList <PowerSource>();
+	
+	class PowerSource
+	{
+		public ForgeDirection connectedDir;
+		public TileEntity te;
+		
+		public PowerSource(ForgeDirection dir, TileEntity te)
+		{
+			this.connectedDir = dir;
+			this.te = te;
+		}
+	}
 	
 	/*
 	 * UP, DOWN, NORTH, EAST, SOUTH, WEST
@@ -18,25 +34,55 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 		this.setType(type);
 	}
 	
+	public void distributePower()
+	{
+		
+	}
+	
 	public void updateEntity()
 	{
 		this.updateConnections();
+		if (this.powerSourceConnected)
+		{
+			this.distributePower();
+		}
 	}
 	
 	public void updateConnections()
 	{
-		if (this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof IEnergyHandler) connections[0] = ForgeDirection.UP;
-		else connections[0] = null;
-		if (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IEnergyHandler) connections[1] = ForgeDirection.DOWN;
-		else connections[1] = null;
-		if (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof IEnergyHandler) connections[2] = ForgeDirection.NORTH;
-		else connections[2] = null;
-		if (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof IEnergyHandler) connections[3] = ForgeDirection.EAST;
-		else connections[3] = null;
-		if (this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof IEnergyHandler) connections[4] = ForgeDirection.SOUTH;
-		else connections[4] = null;
-		if (this.worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof IEnergyHandler) connections[5] = ForgeDirection.WEST;
-		else connections[5] = null;
+		connections[0] = (this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) != null && (this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof IEnergyHandler)) ? ForgeDirection.UP : null;
+		if (this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof IEnergyHandler)
+		{
+			this.powerSourceConnected = true;
+			this.powerSources.add(new PowerSource(ForgeDirection.UP, this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord)));
+		}
+
+		connections[1] = (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null && (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IEnergyHandler)) ? ForgeDirection.DOWN : null;
+		if (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IEnergyHandler)
+		{
+			this.powerSourceConnected = true;
+			this.powerSources.add(new PowerSource(ForgeDirection.DOWN, this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord)));
+		}
+
+		connections[2] = (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != null && (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof IEnergyHandler)) ? ForgeDirection.NORTH : null;
+		if (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof IEnergyHandler)
+		{
+			this.powerSourceConnected = true;
+			this.powerSources.add(new PowerSource(ForgeDirection.NORTH, this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1)));
+		}
+
+		connections[3] = (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != null && (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof IEnergyHandler)) ? ForgeDirection.EAST : null;
+		if (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof IEnergyHandler)
+		{
+			this.powerSourceConnected = true;
+			this.powerSources.add(new PowerSource(ForgeDirection.EAST, this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord)));
+		}
+
+		connections[4] = (this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != null && (this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof IEnergyHandler)) ? ForgeDirection.SOUTH : null;
+		this.powerSourceConnected = this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof IEnergyHandler ? true : false;
+
+		connections[5] = (this.worldObj.getTileEntity(xCoord+1, yCoord, zCoord) != null && (this.worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof IEnergyHandler)) ? ForgeDirection.WEST : null;
+		this.powerSourceConnected = this.worldObj.getTileEntity(xCoord+1, yCoord, zCoord) instanceof IEnergyHandler ? true : false;
 	}
 	
 	public boolean onlyOneOpposite(ForgeDirection[] dirs)
@@ -74,5 +120,35 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 
 	public void setType(int type) {
 		this.type = type;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection arg0)
+	{
+		return true;
+	}
+
+	@Override
+	public int extractEnergy(ForgeDirection arg0, int arg1, boolean arg2) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection arg0, int arg1, boolean arg2) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

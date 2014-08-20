@@ -27,6 +27,12 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	protected int tickDirection = 0;
 	public boolean canEmitPower = true;
 	
+	class HungryTile
+	{
+		public ForgeDirection feedDir;
+		public TileEntity te;
+	}
+	
 	public BaseKineticEnergyCubeTileEntity()
 	{
 		super();
@@ -136,12 +142,44 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	@Override
 	public void closeInventory() { }
 	
+	public ArrayList <HungryTile> getConnectedHungryTiles(int x, int y, int z)
+	{
+		TileEntity tes[] = new TileEntity[6];
+		ForgeDirection dirs[] = new ForgeDirection[6];
+		ArrayList <TileEntity> conduits = new ArrayList <TileEntity>();
+		
+		tes[0] = this.worldObj.getTileEntity(this.xCoord-1, this.yCoord, this.zCoord); // WEST
+		tes[1] = this.worldObj.getTileEntity(this.xCoord+1, this.yCoord, this.zCoord); // EAST
+		tes[2] = this.worldObj.getTileEntity(this.xCoord, this.yCoord-1, this.zCoord); // DOWN
+		tes[3] = this.worldObj.getTileEntity(this.xCoord, this.yCoord+1, this.zCoord); // UP
+		tes[4] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord-1); // SOUTH
+		tes[5] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord+1); // NORTH
+		
+		dirs[0] = ForgeDirection.WEST;
+		dirs[1] = ForgeDirection.EAST;
+		dirs[2] = ForgeDirection.DOWN;
+		dirs[3] = ForgeDirection.UP;
+		dirs[4] = ForgeDirection.SOUTH;
+		dirs[5] = ForgeDirection.NORTH;
+		
+		/* Gather all connected conduit tiles */
+		for (int i=0; i<6; i++)
+		{
+			if (tes[i] != null && tes[i] instanceof KineticEnergyConduitTileEntity)
+			{
+				
+			}
+		}
+		
+		return null;
+	}
+	
 	@Override
 	public void updateEntity()
 	{
 		if (this.canEmitPower)
 		{
-			ArrayList <Integer> hungryTiles = new ArrayList <Integer>();
+			ArrayList <HungryTile> hungryTiles = new ArrayList <HungryTile>();
 			
 			TileEntity tes[] = new TileEntity[6];
 			ForgeDirection dirs[] = new ForgeDirection[6];
@@ -163,13 +201,20 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 			/* Gather all tiles that want energy */
 			for (int i=0; i<6; i++)
 			{
-				if (tes[i] != null && tes[i] instanceof IEnergyHandler)
+				if (tes[i] != null)
 				{
-					if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+					if (tes[i] instanceof IEnergyHandler)
 					{
-						hungryTiles.add(i);
+						if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+						{
+							HungryTile tileToAdd = new HungryTile();
+							tileToAdd.feedDir = dirs[i];
+							tileToAdd.te = tes[i];
+							hungryTiles.add(tileToAdd);
+						}
 					}
 				}
+				
 			}
 			
 			for (int c = 0; c < this.energyCores.length; c++)
@@ -186,19 +231,19 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 						int energyToExtract = energyLeft < maxExtract ? energyLeft : maxExtract;
 						int energyPerTile = energyToExtract / hungryTiles.size();
 						
-						for (Iterator <Integer> te = hungryTiles.iterator(); te.hasNext(); )
+						for (Iterator <HungryTile> te = hungryTiles.iterator(); te.hasNext(); )
 						{	
-							int index = te.next();
+							HungryTile hungryTile = te.next();
 							
 							if (energyToExtract > 0)
 							{
 								if (totalEnergySent < maxExtract)
 								{
-									int energyOut = totalEnergySent + energyPerTile > maxExtract ? maxExtract - totalEnergySent : ((IEnergyHandler)tes[index]).receiveEnergy(dirs[index].getOpposite(), energyPerTile, false);
+									int energyOut = totalEnergySent + energyPerTile > maxExtract ? maxExtract - totalEnergySent : ((IEnergyHandler)hungryTile.te).receiveEnergy(hungryTile.feedDir.getOpposite(), energyPerTile, false);
 									
 									if (energyOut > 0)
 									{
-										this.extractEnergy(dirs[index], energyOut, false);
+										this.extractEnergy(hungryTile.feedDir, energyOut, false);
 										energyCore.setItemDamage(energyCore.getItemDamage() + energyOut);
 										NBTHelper.setInteger(energyCore, "kineticEnergyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
 										this.markDirty();
