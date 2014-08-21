@@ -20,7 +20,7 @@ import com.techmafia.mcmods.KinetiCraft.items.EnderKineticEnergyCore;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
-public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInventory, IEnergyHandler, IEnergyConnection
+public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInventory, IEnergyHandler
 {
 	protected ItemStack[] energyCores;
 	protected EnergyStorage energy = new EnergyStorage(0);

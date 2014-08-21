@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyStorage;
 
 public class KineticEnergyConduitTileEntity extends TileEntity implements IEnergyHandler
 {
@@ -34,17 +35,48 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 		this.setType(type);
 	}
 	
+	public void updateEntity()
+	{
+		this.updateConnections();
+		
+		this.updatePowerSources();
+		
+		if (this.powerSourceConnected)
+		{
+			this.distributePower();
+		}
+	}
+	
 	public void distributePower()
 	{
 		
 	}
 	
-	public void updateEntity()
+	public void updatePowerSources()
 	{
-		this.updateConnections();
-		if (this.powerSourceConnected)
+		TileEntity tes[] = new TileEntity[6];
+		ForgeDirection dirs[] = new ForgeDirection[6];
+		
+		tes[0] = this.worldObj.getTileEntity(this.xCoord-1, this.yCoord, this.zCoord); // WEST
+		tes[1] = this.worldObj.getTileEntity(this.xCoord+1, this.yCoord, this.zCoord); // EAST
+		tes[2] = this.worldObj.getTileEntity(this.xCoord, this.yCoord-1, this.zCoord); // DOWN
+		tes[3] = this.worldObj.getTileEntity(this.xCoord, this.yCoord+1, this.zCoord); // UP
+		tes[4] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord-1); // SOUTH
+		tes[5] = this.worldObj.getTileEntity(this.xCoord, this.yCoord, this.zCoord+1); // NORTH
+		
+		dirs[0] = ForgeDirection.WEST;
+		dirs[1] = ForgeDirection.EAST;
+		dirs[2] = ForgeDirection.DOWN;
+		dirs[3] = ForgeDirection.UP;
+		dirs[4] = ForgeDirection.SOUTH;
+		dirs[5] = ForgeDirection.NORTH;
+		
+		for (int i=0; i<tes.length; i++)
 		{
-			this.distributePower();
+			if (tes[i] != null & tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))
+			{
+				this.powerSources.add(new PowerSource(dirs[i], tes[i]));
+			}
 		}
 	}
 	

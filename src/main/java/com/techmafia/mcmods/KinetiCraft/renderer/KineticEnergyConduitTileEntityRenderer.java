@@ -19,7 +19,6 @@ public class KineticEnergyConduitTileEntityRenderer extends TileEntitySpecialRen
 	@Override
 	public void renderTileEntityAt(TileEntity tileEntity, double translationX, double translationY, double translationZ, float f)
 	{
-		//LogHelper.info("TEST RENDER");
 		GL11.glTranslated(translationX, translationY, translationZ);
 		this.bindTexture(this.texture);
 		GL11.glDisable(GL11.GL_LIGHTING);
