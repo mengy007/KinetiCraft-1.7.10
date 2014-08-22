@@ -1,27 +1,38 @@
 package com.techmafia.mcmods.KinetiCraft.tileentities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
-import cofh.api.energy.IEnergyStorage;
 
-public class KineticEnergyConduitTileEntity extends TileEntity implements IEnergyHandler
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+
+public class KineticEnergyConduitTileEntity extends TileEntity
 {
 	private int type = 0;
 	private boolean powerSourceConnected = false;
-	private ArrayList <PowerSource> powerSources = new ArrayList <PowerSource>();
+	private ArrayList <PowerTile> powerSources = new ArrayList <PowerTile>();
+	private ArrayList <PowerTile> powerDrains = new ArrayList <PowerTile>();
 	
-	class PowerSource
+	class PowerTile
 	{
 		public ForgeDirection connectedDir;
 		public TileEntity te;
+		public boolean source = false;
 		
-		public PowerSource(ForgeDirection dir, TileEntity te)
+		public PowerTile(ForgeDirection dir, TileEntity te)
 		{
 			this.connectedDir = dir;
 			this.te = te;
+		}
+		
+		public PowerTile(ForgeDirection dir, TileEntity te, boolean source)
+		{
+			this.connectedDir = dir;
+			this.te = te;
+			this.source = source;
 		}
 	}
 	
@@ -43,6 +54,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 		
 		if (this.powerSourceConnected)
 		{
+			this.updatePowerDrains();
 			this.distributePower();
 		}
 	}
@@ -52,10 +64,18 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 		
 	}
 	
+	public void updatePowerDrains()
+	{
+
+	}
+	
 	public void updatePowerSources()
 	{
 		TileEntity tes[] = new TileEntity[6];
 		ForgeDirection dirs[] = new ForgeDirection[6];
+		
+		// Clear power sources
+		this.powerSources = new ArrayList <PowerTile>(); 
 		
 		tes[0] = this.worldObj.getTileEntity(this.xCoord-1, this.yCoord, this.zCoord); // WEST
 		tes[1] = this.worldObj.getTileEntity(this.xCoord+1, this.yCoord, this.zCoord); // EAST
@@ -75,9 +95,11 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 		{
 			if (tes[i] != null & tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))
 			{
-				this.powerSources.add(new PowerSource(dirs[i], tes[i]));
+				this.powerSources.add(new PowerTile(dirs[i], tes[i]));
 			}
 		}
+		
+		LogHelper.info("Found " + this.powerSources.size() + " power sources connected to this conduit!");
 	}
 	
 	public void updateConnections()
@@ -86,28 +108,28 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 		if (this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord) instanceof IEnergyHandler)
 		{
 			this.powerSourceConnected = true;
-			this.powerSources.add(new PowerSource(ForgeDirection.UP, this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord)));
+			this.powerSources.add(new PowerTile(ForgeDirection.UP, this.worldObj.getTileEntity(xCoord, yCoord+1, zCoord)));
 		}
 
 		connections[1] = (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) != null && (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IEnergyHandler)) ? ForgeDirection.DOWN : null;
 		if (this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord) instanceof IEnergyHandler)
 		{
 			this.powerSourceConnected = true;
-			this.powerSources.add(new PowerSource(ForgeDirection.DOWN, this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord)));
+			this.powerSources.add(new PowerTile(ForgeDirection.DOWN, this.worldObj.getTileEntity(xCoord, yCoord-1, zCoord)));
 		}
 
 		connections[2] = (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) != null && (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof IEnergyHandler)) ? ForgeDirection.NORTH : null;
 		if (this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1) instanceof IEnergyHandler)
 		{
 			this.powerSourceConnected = true;
-			this.powerSources.add(new PowerSource(ForgeDirection.NORTH, this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1)));
+			this.powerSources.add(new PowerTile(ForgeDirection.NORTH, this.worldObj.getTileEntity(xCoord, yCoord, zCoord-1)));
 		}
 
 		connections[3] = (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) != null && (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof IEnergyHandler)) ? ForgeDirection.EAST : null;
 		if (this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord) instanceof IEnergyHandler)
 		{
 			this.powerSourceConnected = true;
-			this.powerSources.add(new PowerSource(ForgeDirection.EAST, this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord)));
+			this.powerSources.add(new PowerTile(ForgeDirection.EAST, this.worldObj.getTileEntity(xCoord-1, yCoord, zCoord)));
 		}
 
 		connections[4] = (this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) != null && (this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof KineticEnergyConduitTileEntity || this.worldObj.getTileEntity(xCoord, yCoord, zCoord+1) instanceof IEnergyHandler)) ? ForgeDirection.SOUTH : null;
@@ -152,35 +174,5 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	@Override
-	public boolean canConnectEnergy(ForgeDirection arg0)
-	{
-		return true;
-	}
-
-	@Override
-	public int extractEnergy(ForgeDirection arg0, int arg1, boolean arg2) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored(ForgeDirection arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int getMaxEnergyStored(ForgeDirection arg0) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int receiveEnergy(ForgeDirection arg0, int arg1, boolean arg2) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }

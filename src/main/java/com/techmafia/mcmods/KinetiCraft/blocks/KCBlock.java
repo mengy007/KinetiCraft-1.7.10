@@ -10,10 +10,12 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -64,5 +66,21 @@ public class KCBlock extends BlockContainer
 	public int onBlockPlaced(World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata)
     {
         return super.onBlockPlaced(world, x, y, z, side, hitX, hitY, hitZ, metadata);
+    }
+	
+	/**
+     * Called when a tile entity on a side of this block changes is created or is destroyed.
+     * @param world The world
+     * @param x The x position of this block instance
+     * @param y The y position of this block instance
+     * @param z The z position of this block instance
+     * @param tileX The x position of the tile that changed
+     * @param tileY The y position of the tile that changed
+     * @param tileZ The z position of the tile that changed
+     */
+	@Override
+	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+		LogHelper.info("Neighbor changed!");
     }
 }
