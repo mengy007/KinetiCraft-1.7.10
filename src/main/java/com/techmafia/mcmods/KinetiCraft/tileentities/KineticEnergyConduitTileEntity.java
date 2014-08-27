@@ -182,6 +182,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 		TileEntity tes[] = new TileEntity[6];
 		ForgeDirection dirs[] = new ForgeDirection[6];
 		ArrayList <PowerTile> returnList = new ArrayList <PowerTile>();
+		boolean tileConnectedToPowerSource = false;
 		
 		tes[0] = this.worldObj.getTileEntity(start.x-1, start.y, 	start.z); // WEST
 		tes[1] = this.worldObj.getTileEntity(start.x+1, start.y, 	start.z); // EAST
@@ -226,17 +227,37 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 						}
 					}
 				}
-				else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))// && ((IEnergyHandler)tes[i]).extractEnergy(dirs[i].getOpposite(), 1, true) > 0)
+				else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))
 				{
-					// Add to return list if any connected power drains are found
-					//LogHelper.info("Power drain found!");
-					returnList.add(new PowerTile(dirs[i], tes[i]));
+					// Power drain
+					if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+					{
+						returnList.add(new PowerTile(dirs[i], tes[i]));
+					}
+					// Power source
+					else if (((IEnergyHandler)tes[i]).extractEnergy(dirs[i].getOpposite(), 1, true) > 0)
+					{
+						tileConnectedToPowerSource = true;
+					}
 				}
 				else
 				{
 					//LogHelper.info("Block found!");
 				}
 			}
+		}
+		
+		if (tileConnectedToPowerSource)
+		{
+			ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
+			
+			// Add connected power sources
+			for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
+			{
+				TileEntity te = it.next().te;				
+				checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
+			}			
+			this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
 		}
 		
 		return returnList;
