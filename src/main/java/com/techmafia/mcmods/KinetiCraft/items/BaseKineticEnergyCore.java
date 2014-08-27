@@ -12,15 +12,17 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import cofh.api.energy.IEnergyHandler;
+
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BaseKineticEnergyCore extends Item
+public class BaseKineticEnergyCore extends Item implements IEnergyHandler
 {
 	protected int energyFromJumping = 0;
 	protected int energyFromMoving = 0;
@@ -255,5 +257,35 @@ public class BaseKineticEnergyCore extends Item
 	public int getDamage(ItemStack itemStack)
 	{
 		return super.getDamage(itemStack);
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection dir)
+	{
+		return false;
+	}
+
+	@Override
+	public int extractEnergy(ForgeDirection dir, int maxExtract, boolean simulate)
+	{
+		return 0;
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection arg0, int arg1, boolean arg2) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

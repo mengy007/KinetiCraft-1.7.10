@@ -1,9 +1,11 @@
 package com.techmafia.mcmods.KinetiCraft.blocks;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
@@ -110,5 +112,54 @@ public class KineticEnergyConduit extends BlockContainer
 	public boolean renderAsNormalBlock()
 	{
 		return false;
+	}
+	
+	/**
+     * Called when a tile entity on a side of this block changes is created or is destroyed.
+     * @param world The world
+     * @param x The x position of this block instance
+     * @param y The y position of this block instance
+     * @param z The z position of this block instance
+     * @param tileX The x position of the tile that changed
+     * @param tileY The y position of the tile that changed
+     * @param tileZ The z position of the tile that changed
+     */
+	@Override
+    public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
+    {
+		TileEntity te = ((World)world).getTileEntity(x, y, z);
+		
+		if (te != null && te instanceof KineticEnergyConduitTileEntity)
+		{
+			((KineticEnergyConduitTileEntity)te).updateConduitNetwork();
+		}
+    }
+	
+	/**
+     * Called after a block is placed
+     */
+	@Override
+    public void onPostBlockPlaced(World world, int x, int y, int z, int p_149714_5_)
+    {
+		TileEntity te = ((World)world).getTileEntity(x, y, z);
+		
+		if (te != null && te instanceof KineticEnergyConduitTileEntity)
+		{
+			((KineticEnergyConduitTileEntity)te).updateConduitNetwork();
+		}
+    }
+	
+	/**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+	@Override
+    public void onBlockAdded(World world, int x, int y, int z)
+	{
+		TileEntity te = ((World)world).getTileEntity(x, y, z);
+		
+		if (te != null && te instanceof KineticEnergyConduitTileEntity)
+		{
+			((KineticEnergyConduitTileEntity)te).updateConduitNetwork();
+		}
 	}
 }

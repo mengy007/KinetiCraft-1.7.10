@@ -302,7 +302,18 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	@Override
 	public boolean canConnectEnergy(ForgeDirection from)
 	{
-		return true;
+		// Only connect if there are cores available
+		for (int c = 0; c < this.energyCores.length; c++)
+		{
+			ItemStack energyCore = this.getStackInSlot(c);
+		
+			if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	@Override
@@ -312,9 +323,69 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
+	public int extractEnergy(ForgeDirection from, int max, boolean simulate)
 	{
-		return energy.extractEnergy(maxExtract, simulate);
+		int totalEnergyToSend = 0;
+		int energyLeftUntilMax = max;
+		
+		for (int c = 0; c < this.energyCores.length; c++)
+		{
+			ItemStack energyCore = this.getStackInSlot(c);
+			
+			if (energyLeftUntilMax <= 0) break;
+			
+			if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore && energyCore.getItemDamage() < energyCore.getMaxDamage())
+			{			
+				int energyFromCore = 0;
+				int maxCoreExtract = ((BaseKineticEnergyCore)energyCore.getItem()).getMaxExtract();
+				int coreEnergyLeft = NBTHelper.getInt(energyCore, "kineticEnergyStored");
+				
+				LogHelper.info("MaxCoreExtract: " + maxCoreExtract + ", coreEnergyLeft: " + coreEnergyLeft);
+				
+				if (maxCoreExtract <= coreEnergyLeft && maxCoreExtract <= energyLeftUntilMax)
+				{
+					LogHelper.info("ee: 1st: " + maxCoreExtract);
+					totalEnergyToSend += maxCoreExtract;
+					energyFromCore = maxCoreExtract;					
+				}
+				else if (maxCoreExtract > coreEnergyLeft)
+				{
+					if (coreEnergyLeft > energyLeftUntilMax)
+					{
+						LogHelper.info("ee: 2nd-1: " + energyLeftUntilMax);
+						totalEnergyToSend += energyLeftUntilMax;
+						energyFromCore = energyLeftUntilMax;
+					}
+					else
+					{
+						LogHelper.info("ee: 2nd-2: " + coreEnergyLeft);
+						totalEnergyToSend += coreEnergyLeft;
+						energyFromCore = coreEnergyLeft;
+					}
+				}
+				else if (maxCoreExtract > energyLeftUntilMax)
+				{
+					LogHelper.info("ee: 3rd: " + energyLeftUntilMax);
+					totalEnergyToSend += energyLeftUntilMax;
+					energyFromCore = energyLeftUntilMax;
+				}
+
+				if (energyFromCore > 0)
+				{
+					energyLeftUntilMax -= energyFromCore;
+					
+					if (!simulate)
+					{
+						energyCore.setItemDamage(energyCore.getItemDamage()+energyFromCore);
+						NBTHelper.setInteger(energyCore, "kineticEnergyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
+						NBTHelper.setInteger(energyCore, "overCharge", 0);
+						this.markDirty();
+					}
+				}
+			}
+		}
+		
+		return totalEnergyToSend;
 	}
 
 	@Override
