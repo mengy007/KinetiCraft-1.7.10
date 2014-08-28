@@ -8,11 +8,11 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import com.techmafia.mcmods.KinetiCraft.tileentities.KineticEnergyConduitTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.conduits.KineticEnergyConduitTileEntity;
 
 public class KineticEnergyConduitTileEntityRenderer extends TileEntitySpecialRenderer
 {
-	private ResourceLocation texture = new ResourceLocation("kineticraft:textures/blocks/woodenPowerConduit.png");
+	private ResourceLocation texture = new ResourceLocation("kineticraft:textures/blocks/kineticPowerConduit.png");
 	private float pixel = 1f/16f;
 	private float texturePixel = 1f/32f;
 	

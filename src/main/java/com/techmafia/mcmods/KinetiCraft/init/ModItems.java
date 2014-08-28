@@ -58,10 +58,10 @@ public class ModItems
 		});
 		GameRegistry.addRecipe(ironCoreEmpty, new Object[]{
 			" I ",
-			"ICI",
+			"ISI",
 			" I ",
 			'I', Items.iron_ingot,
-			'C', Items.redstone
+			'S', new ItemStack(stoneKineticEnergyCore, 1 ,OreDictionary.WILDCARD_VALUE)
 		});
 		GameRegistry.addRecipe(goldCoreEmpty, new Object[]{
 			" C ",

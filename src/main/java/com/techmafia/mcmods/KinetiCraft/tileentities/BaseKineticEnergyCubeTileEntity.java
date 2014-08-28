@@ -17,6 +17,7 @@ import cofh.api.energy.IEnergyHandler;
 import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
 import com.techmafia.mcmods.KinetiCraft.items.BaseKineticEnergyCore;
 import com.techmafia.mcmods.KinetiCraft.items.EnderKineticEnergyCore;
+import com.techmafia.mcmods.KinetiCraft.tileentities.conduits.KineticEnergyConduitTileEntity;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
@@ -174,12 +175,33 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 		return null;
 	}
 	
+	public int getMaxAvailableEnergyPerTick()
+	{
+		int maxEnergyPerTick = 0;
+		
+		for (int c = 0; c < this.energyCores.length; c++)
+		{
+			ItemStack energyCore = this.getStackInSlot(c);
+			
+			if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore && energyCore.getItemDamage() < energyCore.getMaxDamage())
+			{
+				int coreMaxThroughPut = ((BaseKineticEnergyCore)energyCore.getItem()).getMaxExtract();
+				int coreAvailable = NBTHelper.getInt(energyCore, "kineticEnergyStored");
+				maxEnergyPerTick += coreMaxThroughPut > coreAvailable ? coreAvailable : coreMaxThroughPut;
+			}
+		}
+		
+		return maxEnergyPerTick;
+	}
+	
 	@Override
 	public void updateEntity()
 	{
 		if (this.canEmitPower)
 		{
 			ArrayList <HungryTile> hungryTiles = new ArrayList <HungryTile>();
+			int maxAvailable = this.getMaxAvailableEnergyPerTick();
+			int energyPerTile = 0;
 			
 			TileEntity tes[] = new TileEntity[6];
 			ForgeDirection dirs[] = new ForgeDirection[6];
@@ -213,10 +235,30 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 							hungryTiles.add(tileToAdd);
 						}
 					}
-				}
-				
+				}		
 			}
 			
+			if (hungryTiles.size() > 0 && maxAvailable >= hungryTiles.size())
+			{
+				energyPerTile = maxAvailable / hungryTiles.size();				
+				
+				for (Iterator <HungryTile> te = hungryTiles.iterator(); te.hasNext(); )
+				{	
+					HungryTile hungryTile = te.next();
+					int tileEnergyTook = 0;
+					int energyExtracted = 0;
+					
+					energyExtracted = this.extractEnergy(hungryTile.feedDir, energyPerTile, false);
+					tileEnergyTook = ((IEnergyHandler)hungryTile.te).receiveEnergy(hungryTile.feedDir.getOpposite(), energyExtracted, false);
+					
+					if (tileEnergyTook < energyExtracted)
+					{
+						// Implement buffer system or redistribute power back to cores somehow
+					}
+				}
+			}
+			
+			/*
 			for (int c = 0; c < this.energyCores.length; c++)
 			{
 				int totalEnergySent = 0;
@@ -266,6 +308,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 					}
 				}
 			}
+			*/
 		}
 	}
 	

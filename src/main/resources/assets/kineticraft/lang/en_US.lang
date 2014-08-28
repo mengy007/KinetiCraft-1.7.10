@@ -8,5 +8,6 @@ tile.mengy007_kineticraft:stoneKineticEnergyCube.name=Stone Kinetic Energy Cube
 tile.mengy007_kineticraft:ironKineticEnergyCube.name=Iron Kinetic Energy Cube
 tile.mengy007_kineticraft:goldKineticEnergyCube.name=Gold Kinetic Energy Cube
 tile.mengy007_kineticraft:enderKineticEnergyCube.name=Ender Kinetic Energy Cube
+tile.mengy007_kineticraft:kineticEnergyConduit.name=Ender Kinetic Energy Conduit
 tile.mengy007_kineticraft:kineticFurnace.name=Kinetic Furnace
 itemGroup.mengy007_kinecticraft=KinectiCraft

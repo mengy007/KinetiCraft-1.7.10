@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 import com.techmafia.mcmods.KinetiCraft.blocks.KineticEnergyCube;
-import com.techmafia.mcmods.KinetiCraft.blocks.KineticEnergyConduit;
+import com.techmafia.mcmods.KinetiCraft.blocks.conduits.*;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -18,19 +18,21 @@ public class ModBlocks
 	public static final KineticEnergyCube goldKineticEnergyCube 		= new KineticEnergyCube(4);
 	public static final KineticEnergyCube enderKineticEnergyCube 		= new KineticEnergyCube(5);
 	
-	public static final KineticEnergyConduit woodenKineticEnergyConduit	= new KineticEnergyConduit(1);
+	public static final KineticEnergyConduit kineticEnergyConduit		= new KineticEnergyConduit();
 	
 	//public static final KineticFurnace kineticFurnace 				= new KineticFurnace();
 	
 	public static void init()
 	{
+		// Blocks
 		GameRegistry.registerBlock(woodenKineticEnergyCube, "woodenKineticEnergyCube");
 		GameRegistry.registerBlock(stoneKineticEnergyCube, "StoneKineticEnergyCube");
 		GameRegistry.registerBlock(ironKineticEnergyCube, "IronKineticEnergyCube");
 		GameRegistry.registerBlock(goldKineticEnergyCube, "GoldKineticEnergyCube");
 		GameRegistry.registerBlock(enderKineticEnergyCube, "EnderKineticEnergyCube");
 		
-		GameRegistry.registerBlock(woodenKineticEnergyConduit, "woodenKineticEnergyConduit");
+		// Conduits
+		GameRegistry.registerBlock(kineticEnergyConduit, "kineticEnergyConduit");
 		
 		//GameRegistry.registerBlock(kineticFurnace, "kineticFurnace");
 		
@@ -77,10 +79,30 @@ public class ModBlocks
 		});
 		
 		/* Energy Conduits */
-		GameRegistry.addRecipe(new ItemStack(woodenKineticEnergyConduit, 3), new Object[]{
-			"WBW",
-			'W', Blocks.planks,
-			'B', Blocks.stone_button 
+		GameRegistry.addRecipe(new ItemStack(kineticEnergyConduit, 1), new Object[]{
+			"CBC",
+			'C', new ItemStack(ModItems.woodenKineticEnergyCore, 1),
+			'B', Blocks.planks
+		});
+		GameRegistry.addRecipe(new ItemStack(kineticEnergyConduit, 2), new Object[]{
+			"CBC",
+			'C', new ItemStack(ModItems.stoneKineticEnergyCore, 1),
+			'B', Blocks.stone
+		});
+		GameRegistry.addRecipe(new ItemStack(kineticEnergyConduit, 4), new Object[]{
+			"CBC",
+			'C', new ItemStack(ModItems.ironKineticEnergyCore, 1),
+			'B', Blocks.iron_block
+		});
+		GameRegistry.addRecipe(new ItemStack(kineticEnergyConduit, 8), new Object[]{
+			"CBC",
+			'C', new ItemStack(ModItems.goldKineticEnergyCore, 1),
+			'B', Blocks.gold_block
+		});
+		GameRegistry.addRecipe(new ItemStack(kineticEnergyConduit, 16), new Object[]{
+			"CBC",
+			'C', new ItemStack(ModItems.goldKineticEnergyCore, 1),
+			'B', Items.ender_pearl
 		});
 	}
 }

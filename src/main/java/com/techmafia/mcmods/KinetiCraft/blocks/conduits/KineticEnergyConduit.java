@@ -1,4 +1,4 @@
-package com.techmafia.mcmods.KinetiCraft.blocks;
+package com.techmafia.mcmods.KinetiCraft.blocks.conduits;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -10,30 +10,28 @@ import net.minecraft.world.World;
 
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
-import com.techmafia.mcmods.KinetiCraft.tileentities.KineticEnergyConduitTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.conduits.KineticEnergyConduitTileEntity;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 public class KineticEnergyConduit extends BlockContainer
 {
-	private int type = 0;
-	
-	public KineticEnergyConduit(int type)
+	public KineticEnergyConduit()
 	{
-		super(Material.wood);
+		super(Material.rock);
 		
 		float pixel = 1f/16f;
 		
-		this.setHardness(0.1f);
+		this.setHardness(0.4f);
 		this.useNeighborBrightness = true;
 		this.setCreativeTab(CreativeTabKC.KC_TAB);
 		this.setBlockBounds(9*pixel/2, 9*pixel/2, 9*pixel/2, 1-9*pixel/2, 1-9*pixel/2, 1-9*pixel/2);
-		this.type = type;
+		this.setBlockName("kineticEnergyConduit");
 	}
 	
 	@Override
 	public TileEntity createNewTileEntity(World world, int i)
 	{
-		return new KineticEnergyConduitTileEntity(this.type);
+		return new KineticEnergyConduitTileEntity();
 	}
 	
 	@Override
