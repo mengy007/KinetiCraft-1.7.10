@@ -3,20 +3,17 @@ package com.techmafia.mcmods.KinetiCraft.tileentities;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import mekanism.api.energy.ICableOutputter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyConnection;
 import cofh.api.energy.IEnergyHandler;
 
-import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
 import com.techmafia.mcmods.KinetiCraft.items.BaseKineticEnergyCore;
-import com.techmafia.mcmods.KinetiCraft.items.EnderKineticEnergyCore;
 import com.techmafia.mcmods.KinetiCraft.tileentities.conduits.KineticEnergyConduitTileEntity;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
@@ -227,13 +224,10 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 				{
 					if (tes[i] instanceof IEnergyHandler)
 					{
-						if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
-						{
-							HungryTile tileToAdd = new HungryTile();
-							tileToAdd.feedDir = dirs[i];
-							tileToAdd.te = tes[i];
-							hungryTiles.add(tileToAdd);
-						}
+						HungryTile tileToAdd = new HungryTile();
+						tileToAdd.feedDir = dirs[i];
+						tileToAdd.te = tes[i];
+						hungryTiles.add(tileToAdd);
 					}
 				}		
 			}
