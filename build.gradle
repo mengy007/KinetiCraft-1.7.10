@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "[1.7.10]1.2.2beta"
+version = "[1.7.10]1.2.4beta"
 group= "com.techmafia.mcmods.KinetiCraft" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "KinetiCraft"
 

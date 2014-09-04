@@ -3,7 +3,6 @@ package com.techmafia.mcmods.KinetiCraft.tileentities;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import mekanism.api.energy.ICableOutputter;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;

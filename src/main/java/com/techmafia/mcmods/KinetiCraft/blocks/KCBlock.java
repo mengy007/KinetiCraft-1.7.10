@@ -81,6 +81,6 @@ public class KCBlock extends BlockContainer
 	@Override
 	public void onNeighborChange(IBlockAccess world, int x, int y, int z, int tileX, int tileY, int tileZ)
     {
-		LogHelper.info("Neighbor changed!");
+		// LogHelper.info("Neighbor changed!");
     }
 }
