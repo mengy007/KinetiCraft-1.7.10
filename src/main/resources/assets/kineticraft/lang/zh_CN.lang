@@ -1,0 +1,14 @@
+item.mengy007_kineticraft:woodenKineticEnergyCore.name=木动能核心
+item.mengy007_kineticraft:stoneKineticEnergyCore.name=石动能核心
+item.mengy007_kineticraft:ironKineticEnergyCore.name=铁动能核心
+item.mengy007_kineticraft:goldKineticEnergyCore.name=金动能核心
+item.mengy007_kineticraft:enderKineticEnergyCore.name=末影动能核心
+tile.mengy007_kineticraft:woodenKineticEnergyCube.name=木动能立方体
+tile.mengy007_kineticraft:stoneKineticEnergyCube.name=石动能立方体
+tile.mengy007_kineticraft:ironKineticEnergyCube.name=铁动能立方体
+tile.mengy007_kineticraft:goldKineticEnergyCube.name=金动能立方体
+tile.mengy007_kineticraft:enderKineticEnergyCube.name=末影动能立方体
+tile.mengy007_kineticraft:kineticEnergyConduit.name=末影动能导管
+tile.mengy007_kineticraft:kineticFurnace.name=动能炉
+
+itemGroup.mengy007_kinecticraft=KinectiCraft
