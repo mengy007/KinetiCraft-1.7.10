@@ -1,10 +1,13 @@
 KinetiCraft-1.7.10
 ==================
 A mod that adds kinetic RF generation and storage. Run! Jump! Swing... but not too much or you'll hurt yourself.
+
 __Requirements:__ Forge, Thermal Expansion
+
 __Installation:__ Copy/Move KinetiCraft jar file into your mods folder.
 
 __Items:__
+
 Wooden Kinetic Energy Core
 - Holds 500 RF
 - Outputs 2 RF/t
@@ -23,6 +26,7 @@ Gold Kinetic Energy Core
 
 
 __Blocks:__
+
 Wooden Kinetic Energy Cube
 - 1 core slot
  
