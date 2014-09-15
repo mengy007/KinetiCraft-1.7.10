@@ -52,7 +52,7 @@ Ender Kinetic Energy Cube
 __Feature Set for 1.0 release__
 
 ---------------------------------
-[ Items ]
+__Items__
 Kinetic Ingot
 - Created from Walking/Running/Jumping on Kinetic Block
 - Used for crafting Kinetic Items / Blocks / Tools / Weapons / Armor
@@ -92,7 +92,7 @@ Ender Kinetic Energy Core
 - 5,000 RF from using (chance to teleport up 2 blocks)
 - Using this item teleports player through blocks up to 2 thick. Uses 5,000 RF each time. 
 
-[ Blocks ]
+__Blocks__
 Kinetic Block
 - Walk/Run/Jump on to create Kinetic Ingots
 - Crafted from dirt + sand (1 dirt + 1 sand = 2 Kinetic Dust)
@@ -131,7 +131,7 @@ Ender Kinetic Energy Generator
 - 9 cores
 - Sucks life essence from Endermen who wander too close to device and converts it into energy
 
-[ Conduits ]
+__Conduits__
 - Closest first energy draw
 
 Iron Kinetic Energy Conduit
