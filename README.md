@@ -44,9 +44,10 @@ Gold Kinetic Energy Cube
 Ender Kinetic Energy Cube
 - 9 core slots
 - Inventory is shared between all Ender Kinetic Energy Cubes
-- 
-__[Feature Set for 1.0 release]__
-KinetiCraft v1.0 release
+
+
+Feature Set for 1.0 release
+
 ---------------------------------
 [ Items ]
 - Kinetic Ingot
