@@ -46,7 +46,10 @@ Ender Kinetic Energy Cube
 - Inventory is shared between all Ender Kinetic Energy Cubes
 
 
-Feature Set for 1.0 release
+---------------------------------
+
+
+__Feature Set for 1.0 release__
 
 ---------------------------------
 [ Items ]
