@@ -6,7 +6,11 @@ __Requirements:__ Forge, Thermal Expansion
 
 __Installation:__ Copy/Move KinetiCraft jar file into your mods folder.
 
+---------------------------------
+
 __[Current Feature Set]__
+
+---------------------------------
 
 __Items:__
 
