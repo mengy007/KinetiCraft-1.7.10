@@ -57,12 +57,6 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 				nbttagcompound1.setByte("Slot", (byte)i);
 				this.inventory.energyCores[i].writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
-				
-				LogHelper.info("EP IEEP: Saving core in slot " + i);
-			}
-			else
-			{
-				LogHelper.info("EP IEEP: Slot null!");
 			}
 		}
 	
@@ -71,7 +65,6 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 		/*
 		 * Save Ender Energy
 		 */
-		LogHelper.info("EE: " + this.enderEnergy);
 		nbt.setInteger("enderEnergy", this.enderEnergy);
 	}
 
@@ -90,7 +83,6 @@ public class ExtendedPlayer implements IExtendedEntityProperties
 
 			if (j >= 0 && j < this.inventory.energyCores.length)
 			{
-				LogHelper.info("EP IEEP : Core found at: " + j);
 				this.inventory.energyCores[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
