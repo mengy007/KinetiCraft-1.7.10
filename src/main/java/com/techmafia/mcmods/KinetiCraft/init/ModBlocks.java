@@ -5,13 +5,16 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
+import com.techmafia.mcmods.KinetiCraft.blocks.KineticBlock;
 import com.techmafia.mcmods.KinetiCraft.blocks.KineticEnergyCube;
-import com.techmafia.mcmods.KinetiCraft.blocks.conduits.*;
+import com.techmafia.mcmods.KinetiCraft.blocks.KineticEnergyGenerator;
+import com.techmafia.mcmods.KinetiCraft.blocks.conduits.KineticEnergyConduit;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks
 {
+	public static final KineticBlock kineticBlock						= new KineticBlock();
 	public static final KineticEnergyCube woodenKineticEnergyCube 		= new KineticEnergyCube(1);
 	public static final KineticEnergyCube stoneKineticEnergyCube 		= new KineticEnergyCube(2);
 	public static final KineticEnergyCube ironKineticEnergyCube 		= new KineticEnergyCube(3);
@@ -20,11 +23,12 @@ public class ModBlocks
 	
 	public static final KineticEnergyConduit kineticEnergyConduit		= new KineticEnergyConduit();
 	
-	//public static final KineticFurnace kineticFurnace 				= new KineticFurnace();
+	public static final KineticEnergyGenerator kineticEnergyGenerator	= new KineticEnergyGenerator();
 	
 	public static void init()
 	{
 		// Blocks
+		GameRegistry.registerBlock(kineticBlock, "kineticBlock");
 		GameRegistry.registerBlock(woodenKineticEnergyCube, "woodenKineticEnergyCube");
 		GameRegistry.registerBlock(stoneKineticEnergyCube, "StoneKineticEnergyCube");
 		GameRegistry.registerBlock(ironKineticEnergyCube, "IronKineticEnergyCube");
@@ -34,51 +38,61 @@ public class ModBlocks
 		// Conduits
 		GameRegistry.registerBlock(kineticEnergyConduit, "kineticEnergyConduit");
 		
-		//GameRegistry.registerBlock(kineticFurnace, "kineticFurnace");
+		// Generators
+		GameRegistry.registerBlock(kineticEnergyGenerator, "kineticEnergyGenerator");
 		
 		/* Blocks Crafting Recipes */
+		GameRegistry.addShapelessRecipe(new ItemStack(kineticBlock, 2), new Object[]{
+			Blocks.sand,
+			Blocks.dirt
+		});
+		
 		GameRegistry.addRecipe(new ItemStack(woodenKineticEnergyCube, 1), new Object[]{
-			"WWW",
-			"WLW",
-			"WWW",
+			"WKW",
+			"KLK",
+			"WKW",
 			'W', Blocks.planks,
-			'L', Blocks.lever
+			'L', Blocks.lever,
+			'K', ModItems.kineticIngot
 		});
 		
 		GameRegistry.addRecipe(new ItemStack(stoneKineticEnergyCube, 1), new Object[]{
-			"AAA",
-			"ABA",
-			"AAA",
+			"AKA",
+			"KBK",
+			"AKA",
 			'A', Blocks.stone,
-			'B', new ItemStack(woodenKineticEnergyCube, 1, OreDictionary.WILDCARD_VALUE)
+			'B', new ItemStack(woodenKineticEnergyCube, 1, OreDictionary.WILDCARD_VALUE),
+			'K', ModItems.kineticIngot
 		});
 		
 		GameRegistry.addRecipe(new ItemStack(ironKineticEnergyCube, 1), new Object[]{
-			"WWW",
-			"WLW",
-			"WWW",
+			"WKW",
+			"KLK",
+			"WKW",
 			'W', Items.iron_ingot,
-			'L', new ItemStack(stoneKineticEnergyCube, 1, OreDictionary.WILDCARD_VALUE)
+			'L', new ItemStack(stoneKineticEnergyCube, 1, OreDictionary.WILDCARD_VALUE),
+			'K', ModItems.kineticIngot
 		});
 		
 		GameRegistry.addRecipe(new ItemStack(goldKineticEnergyCube, 1), new Object[]{
-			"WWW",
-			"WLW",
-			"WWW",
+			"WKW",
+			"KLK",
+			"WKW",
 			'W', Items.gold_ingot,
-			'L', new ItemStack(ironKineticEnergyCube, 1, OreDictionary.WILDCARD_VALUE)
+			'L', new ItemStack(ironKineticEnergyCube, 1, OreDictionary.WILDCARD_VALUE),
+			'K', ModItems.kineticIngot
 		});
 		
 		GameRegistry.addRecipe(new ItemStack(enderKineticEnergyCube, 1), new Object[]{
-			"OWO",
-			"WRW",
-			"OWO",
+			"WKW",
+			"KRK",
+			"WKW",
 			'W', Items.ender_pearl,
-			'O', Blocks.obsidian,
+			'K', ModItems.kineticIngot,
 			'R', Items.redstone
 		});
 		
-		/* Energy Conduits */
+		/* Energy Conduits - NEED TO FIX */
 		GameRegistry.addRecipe(new ItemStack(kineticEnergyConduit, 1), new Object[]{
 			"CBC",
 			'C', new ItemStack(ModItems.woodenKineticEnergyCore, 1),

@@ -8,14 +8,14 @@ public class StoneKineticEnergyCore extends BaseKineticEnergyCore
 		
 		this.setUnlocalizedName("stoneKineticEnergyCore");
 		
-		this.energyFromJumping				= 1;
-		this.energyFromMoving				= 2;
-		this.energyFromUsing				= 5;
+		this.energyFromJumping				= 5; 	//1;
+		this.energyFromMoving				= 10; 	//2;
+		this.energyFromUsing				= 20; 	//5;
 		this.overChargeBuffer				= 4;
-		this.maxEnergy						= 1000;
+		this.maxEnergy						= 10000;
 		this.hasMultipleIcons				= true;
 		this.damageFromOverChargeExplosion	= 1.5f;
-		this.maxExtract						= 5;
+		this.maxExtract						= 20; 	//10;
 		
 		this.setMaxDamage(this.maxEnergy);
 	}

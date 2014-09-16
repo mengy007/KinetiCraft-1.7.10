@@ -1,22 +1,9 @@
 package com.techmafia.mcmods.KinetiCraft.items;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-
-import com.techmafia.mcmods.KinetiCraft.KinetiCraft;
-import com.techmafia.mcmods.KinetiCraft.entities.EnderKineticEnergy;
-import com.techmafia.mcmods.KinetiCraft.player.ExtendedPlayer;
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
-import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
 public class EnderKineticEnergyCore extends BaseKineticEnergyCore
 {	
@@ -26,73 +13,76 @@ public class EnderKineticEnergyCore extends BaseKineticEnergyCore
 		
 		this.setUnlocalizedName("enderKineticEnergyCore");
 		
-		this.energyFromJumping 				= 50;
-		this.energyFromMoving 				= 100;
-		this.energyFromUsing 				= 500;
+		this.energyFromJumping 				= 500;
+		this.energyFromMoving 				= 1000;
+		this.energyFromUsing 				= 5000;
 		this.overChargeBuffer 				= 100;
 		this.maxEnergy						= 1000000;
 		this.hasMultipleIcons				= true;
 		this.damageFromOverChargeExplosion 	= 6.0f;
-		this.maxExtract						= 10000;
+		this.maxExtract						= 5000;
+		
+		this.setMaxDamage(this.maxEnergy);
 	}
 	
-	public int getMaxExtract()
-	{
-		return this.maxExtract;
-	}
-	
+	/**
+     * Called when a entity tries to play the 'swing' animation.
+     *  
+     * @param entityLiving The entity swinging the item.
+     * @param stack The Item stack
+     * @return True to cancel any further processing by EntityLiving 
+     */
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack itemStack)
-    {
-		ExtendedPlayer ep = ExtendedPlayer.get((EntityPlayer)entityLiving);
-		
-		LogHelper.info("Current EE: " + ep.enderEnergy);
-		
-		ep.enderEnergy += this.energyFromUsing;
-
-        return false;
+	{
+		if ( ! entityLiving.worldObj.isRemote)
+		{
+			super.onEntitySwing(entityLiving, itemStack);			
+			this.teleportPlayer((EntityPlayer)entityLiving, 10, true);
+		}		
+		return false;
     }
 	
 	/**
-	 * Used to track player movement and jumping
-	 */
-	@Override
-	public void onUpdate(ItemStack itemStack, World world, Entity entity, int par4, boolean inPlayerInv)
-	{
-		super.onUpdate(itemStack, world, entity, par4, inPlayerInv);
-
-		ExtendedPlayer ep = ExtendedPlayer.get((EntityPlayer)entity);
-		EntityPlayer entityPlayer = (EntityPlayer)entity;
-		
-		if (prevDistanceWalkedModified == 0)
-		{
-			prevDistanceWalkedModified = entityPlayer.distanceWalkedModified;
-		}
-		
-		boolean isMoving = entityPlayer.getAIMoveSpeed() > 0.11f ? true : false;
-		boolean isJumping = entityPlayer.fallDistance > 0.0f ? true : false;
-		boolean energyGained = false;
-		
-		if (isMoving)
-		{
-			ep.enderEnergy += energyFromMoving;
-			energyGained = true;
-		}
-		
-		if (isJumping)
-		{
-			ep.enderEnergy += energyFromJumping;
-			energyGained = true;
-		}
-		
-		prevDistanceWalkedModified = entityPlayer.distanceWalkedModified;
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS
+     */
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int p_77648_7_, float p_77648_8_, float p_77648_9_, float p_77648_10_)
+    {
+    	if ( ! world.isRemote)
+    	{
+    		return this.teleportPlayer(entityPlayer, 3, false);
+    	}
+        return false;
     }
 	
-	@Override
-	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4)
+	public boolean teleportPlayer(EntityPlayer entityPlayer, int radius, boolean random)
 	{
-		ExtendedPlayer ep = ExtendedPlayer.get(player);
+		int x, y, z;
 		
-       	list.add(EnumChatFormatting.GREEN + "" + ep.enderEnergy + " RF");
+		if (random)
+		{
+			x = (int) ((Math.random() * (2 * radius)) - radius);
+			y = (int) ((Math.random() * (2 * radius)) - radius);
+			z = (int) ((Math.random() * (2 * radius)) - radius);
+		}
+		else
+		{		
+			x = (int) ((Math.random() * (2 * radius)) - radius);
+			y = (int) ((Math.random() * (2 * radius)) - radius);
+			z = (int) ((Math.random() * (2 * radius)) - radius);
+		}
+		
+		if ( ! (entityPlayer.worldObj.blockExists(x, y, z) && entityPlayer.worldObj.blockExists(x, y-1, z)) && Math.random() <= 0.25)
+		{
+			entityPlayer.posX = x;
+			entityPlayer.posY = y;
+			entityPlayer.posZ = z;
+			//entityLiving.playSound("random.teleport", 1, 1);
+			
+			return true;
+		}
+		
+		return false;
 	}
 }

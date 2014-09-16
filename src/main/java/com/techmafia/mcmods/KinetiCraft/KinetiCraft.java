@@ -28,7 +28,6 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.MOD_NAME, version = Reference.VERSION, guiFactory = Reference.GUI_FACTOR_CLASS)
-//@NetworkMod(clientSideRequired = true, serverSideRequired = true)
 
 public class KinetiCraft
 {	
@@ -74,7 +73,7 @@ public class KinetiCraft
 	@Mod.EventHandler
 	public void load(FMLInitializationEvent event)
 	{
-		//MinecraftForge.EVENT_BUS.register(new ExtendedPlayer());
+
 	}
 
 	@Mod.EventHandler

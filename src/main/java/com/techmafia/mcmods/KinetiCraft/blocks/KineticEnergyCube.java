@@ -5,6 +5,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,10 +25,9 @@ import com.techmafia.mcmods.KinetiCraft.reference.Reference;
 import com.techmafia.mcmods.KinetiCraft.tileentities.EnderKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.GoldKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.IronKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.tileentities.KineticFurnaceTileEntity;
+import com.techmafia.mcmods.KinetiCraft.tileentities.KineticEnergyGeneratorTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.StoneKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.WoodenKineticEnergyCubeTileEntity;
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -46,6 +46,7 @@ public class KineticEnergyCube extends BlockContainer
 	public KineticEnergyCube(int metadata)
 	{
 		super(Material.rock);
+		
 		this.damageDropped(metadata);
 		this.metadata = metadata;
 		
@@ -82,7 +83,7 @@ public class KineticEnergyCube extends BlockContainer
 		this.setHardness(this.blockHardness);
 		this.setCreativeTab(CreativeTabKC.KC_TAB);
 	}
-	
+
 	@Override
 	public String getUnlocalizedName()
 	{
@@ -192,11 +193,8 @@ public class KineticEnergyCube extends BlockContainer
     	 * We want to stop emmiting power if block is being powered by redstone
     	 */
     	
-    	LogHelper.info("CHANGE!");
-    	
     	if (((World)world).isBlockIndirectlyGettingPowered(x, y-1 ,z))
     	{
-    		LogHelper.info("power!");
     		this.frontIcon = this.frontPoweredIcon;
     	}
     	else
@@ -222,8 +220,6 @@ public class KineticEnergyCube extends BlockContainer
 			EnderKineticEnergyCubeTileEntity te = new EnderKineticEnergyCubeTileEntity();
 			te.setOwnerUUID(Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
 			te.setOwnerName(Minecraft.getMinecraft().thePlayer.getDisplayName());
-			
-			LogHelper.info("Setting owner - " + Minecraft.getMinecraft().thePlayer.getUniqueID().toString() + " : " + Minecraft.getMinecraft().thePlayer.getDisplayName());
 			
 			return te;
 		}
@@ -266,8 +262,6 @@ public class KineticEnergyCube extends BlockContainer
 
     	if (te != null && te instanceof EnderKineticEnergyCubeTileEntity)
    		{
-    		LogHelper.info("UUID: " + player.getUniqueID().toString());
-    		
     		if ( ! ((EnderKineticEnergyCubeTileEntity)te).getOwnerUUID().toString().equals(player.getUniqueID().toString()))
     		{
     			player.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This ender energy cube belongs to " + ((EnderKineticEnergyCubeTileEntity)te).getOwnerName() + "!"));

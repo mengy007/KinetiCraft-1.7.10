@@ -10,12 +10,12 @@ public class WoodenKineticEnergyCore extends BaseKineticEnergyCore
 		
 		this.energyFromJumping				= 1;
 		this.energyFromMoving				= 2;
-		this.energyFromUsing				= 5;
+		this.energyFromUsing				= 4;
 		this.overChargeBuffer				= 2;
-		this.maxEnergy						= 500;
+		this.maxEnergy						= 1000;
 		this.hasMultipleIcons				= true;
 		this.damageFromOverChargeExplosion	= 1.0f;
-		this.maxExtract						= 2;
+		this.maxExtract						= 6;
 		
 		this.setMaxDamage(this.maxEnergy);
 	}

@@ -14,7 +14,6 @@ import cofh.api.energy.IEnergyHandler;
 
 import com.techmafia.mcmods.KinetiCraft.items.BaseKineticEnergyCore;
 import com.techmafia.mcmods.KinetiCraft.tileentities.conduits.KineticEnergyConduitTileEntity;
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 import com.techmafia.mcmods.KinetiCraft.utility.NBTHelper;
 
 public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInventory, IEnergyHandler
@@ -64,7 +63,6 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 		}
 		else
 		{
-			LogHelper.error("Invalid index: " + i);
 			return null;
 		}
 	}
@@ -80,7 +78,6 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 		}
 		else
 		{
-			LogHelper.error("Invalid index: " + i + " or no core present");
 			return null;
 		}
 	}
@@ -102,10 +99,6 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 	        {
 	        	itemstack.stackSize = this.getInventoryStackLimit();
 	        }
-		}
-		else
-		{
-			LogHelper.error("Invalid index: " + i);
 		}
 	}
 	
@@ -221,7 +214,7 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 			{
 				if (tes[i] != null)
 				{
-					if (tes[i] instanceof IEnergyHandler)
+					if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
 					{
 						HungryTile tileToAdd = new HungryTile();
 						tileToAdd.feedDir = dirs[i];
@@ -250,87 +243,8 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 					}
 				}
 			}
-			
-			/*
-			for (int c = 0; c < this.energyCores.length; c++)
-			{
-				int totalEnergySent = 0;
-				ItemStack energyCore = this.getStackInSlot(c);
-				
-				if (energyCore != null && energyCore.getItem() instanceof BaseKineticEnergyCore && energyCore.getItemDamage() < energyCore.getMaxDamage())
-				{			
-					if (hungryTiles.size() > 0)
-					{
-						int energyLeft = energyCore.getMaxDamage() - energyCore.getItemDamage();
-						int maxExtract = ((BaseKineticEnergyCore)energyCore.getItem()).getMaxExtract();
-						int energyToExtract = energyLeft < maxExtract ? energyLeft : maxExtract;
-						int energyPerTile = energyToExtract / hungryTiles.size();
-						
-						for (Iterator <HungryTile> te = hungryTiles.iterator(); te.hasNext(); )
-						{	
-							HungryTile hungryTile = te.next();
-							
-							if (energyToExtract > 0)
-							{
-								if (totalEnergySent < maxExtract)
-								{
-									int energyOut = totalEnergySent + energyPerTile > maxExtract ? maxExtract - totalEnergySent : ((IEnergyHandler)hungryTile.te).receiveEnergy(hungryTile.feedDir.getOpposite(), energyPerTile, false);
-									
-									if (energyOut > 0)
-									{
-										this.extractEnergy(hungryTile.feedDir, energyOut, false);
-										energyCore.setItemDamage(energyCore.getItemDamage() + energyOut);
-										NBTHelper.setInteger(energyCore, "kineticEnergyStored", energyCore.getMaxDamage() - energyCore.getItemDamage());
-										this.markDirty();
-										
-										Item item = energyCore.getItem();
-										
-										if (item instanceof EnderKineticEnergyCore && NBTHelper.hasTag(energyCore, "ownerUUID"))
-										{
-											KinetiCraft.proxy.drainEnderEnergyUpdate(energyCore, energyLeft - energyOut);
-										}
-										
-										totalEnergySent += energyOut;
-										
-										// Reset overcharge on item
-										NBTHelper.setInteger(energyCore, "overCharge", 0);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-			*/
 		}
 	}
-	
-	/*
-	@Override
-    public Packet getDescriptionPacket()
-    {
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbt);
-    }
-    */
-
-	/**
-     * Called when you receive a TileEntityData packet for the location this
-     * TileEntity is currently in. On the client, the NetworkManager will always
-     * be the remote server. On the server, it will be whomever is responsible for
-     * sending the packet.
-     *
-     * @param net The NetworkManager the packet originated from
-     * @param pkt The data packet
-     */
-	/*
-    @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt)
-    {
-        this.readFromNBT(pkt.func_148857_g());
-    }
-    */
 	
 	/**
 	 * CoFH interface
@@ -376,11 +290,8 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 				int maxCoreExtract = ((BaseKineticEnergyCore)energyCore.getItem()).getMaxExtract();
 				int coreEnergyLeft = NBTHelper.getInt(energyCore, "kineticEnergyStored");
 				
-				LogHelper.info("MaxCoreExtract: " + maxCoreExtract + ", coreEnergyLeft: " + coreEnergyLeft);
-				
 				if (maxCoreExtract <= coreEnergyLeft && maxCoreExtract <= energyLeftUntilMax)
 				{
-					LogHelper.info("ee: 1st: " + maxCoreExtract);
 					totalEnergyToSend += maxCoreExtract;
 					energyFromCore = maxCoreExtract;					
 				}
@@ -388,20 +299,17 @@ public class BaseKineticEnergyCubeTileEntity extends TileEntity implements IInve
 				{
 					if (coreEnergyLeft > energyLeftUntilMax)
 					{
-						LogHelper.info("ee: 2nd-1: " + energyLeftUntilMax);
 						totalEnergyToSend += energyLeftUntilMax;
 						energyFromCore = energyLeftUntilMax;
 					}
 					else
 					{
-						LogHelper.info("ee: 2nd-2: " + coreEnergyLeft);
 						totalEnergyToSend += coreEnergyLeft;
 						energyFromCore = coreEnergyLeft;
 					}
 				}
 				else if (maxCoreExtract > energyLeftUntilMax)
 				{
-					LogHelper.info("ee: 3rd: " + energyLeftUntilMax);
 					totalEnergyToSend += energyLeftUntilMax;
 					energyFromCore = energyLeftUntilMax;
 				}

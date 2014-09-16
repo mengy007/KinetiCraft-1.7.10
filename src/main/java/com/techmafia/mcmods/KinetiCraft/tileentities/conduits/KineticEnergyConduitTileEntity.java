@@ -4,11 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
 
-import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+import com.techmafia.mcmods.KinetiCraft.utility.*;
 
 public class KineticEnergyConduitTileEntity extends TileEntity
 {
@@ -20,70 +19,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 	private ArrayList <PowerTile> powerDrains = new ArrayList <PowerTile>();
 	private int maxThroughPut = 10000;
 	private boolean firstTick = true;
-	
-	class BlockPos
-	{
-		public int x, y, z;
 		
-		public BlockPos(int x, int y, int z)
-		{
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-		
-		public boolean inArrayList(ArrayList <BlockPos> tes)
-		{
-			//LogHelper.info("inArrayList Start");
-			
-			if (tes != null && tes.size() > 0)
-			{
-				//LogHelper.info("inArrayList passed null and count check: " + tes.size());
-				
-				for (Iterator <BlockPos> i = tes.iterator(); i.hasNext(); )
-				{
-					BlockPos bp = i.next();
-					
-					//LogHelper.info("checking (" + bp.x + "," + bp.y + "," + bp.z + ") == (" + this.x + "," + this.y + "," + this.z + ")");
-					
-					if (bp != null && bp.x == this.x && bp.y == this.y && bp.z == this.z)
-					{
-						//LogHelper.info("inArrayList returning true");
-						return true;
-					}
-				}
-			}
-			else
-			{
-				//LogHelper.info("inArrayList list is either null or size is 0");
-			}
-			
-			//LogHelper.info("inArrayList returning false");
-			
-			return false;
-		}
-	}
-	
-	class PowerTile
-	{
-		public ForgeDirection connectedDir;
-		public TileEntity te;
-		public boolean source = false;
-		
-		public PowerTile(ForgeDirection dir, TileEntity te)
-		{
-			this.connectedDir = dir;
-			this.te = te;
-		}
-		
-		public PowerTile(ForgeDirection dir, TileEntity te, boolean source)
-		{
-			this.connectedDir = dir;
-			this.te = te;
-			this.source = source;
-		}
-	}
-	
 	public KineticEnergyConduitTileEntity()	
 	{
 		super();
@@ -237,11 +173,25 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 					else if (((IEnergyHandler)tes[i]).extractEnergy(dirs[i].getOpposite(), 1, true) > 0)
 					{
 						tileConnectedToPowerSource = true;
+						
+						// There must be a smarter way of doing this
+						if (this.powerSources.size() > 0)
+						{
+							ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
+							
+							// Add connected power sources
+							for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
+							{
+								TileEntity te = it.next().te;				
+								checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
+							}			
+							this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
+						}
 					}
 				}
 				else
 				{
-					//LogHelper.info("Block found!");
+					//Other type of block found
 				}
 			}
 		}

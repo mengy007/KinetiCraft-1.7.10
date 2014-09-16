@@ -1,13 +1,16 @@
+item.mengy007_kineticraft:kineticIngot.name=Kinetic Ingot
 item.mengy007_kineticraft:woodenKineticEnergyCore.name=Wooden Kinetic Energy Core
 item.mengy007_kineticraft:stoneKineticEnergyCore.name=Stone Kinetic Energy Core
 item.mengy007_kineticraft:ironKineticEnergyCore.name=Iron Kinetic Energy Core
 item.mengy007_kineticraft:goldKineticEnergyCore.name=Gold Kinetic Energy Core
 item.mengy007_kineticraft:enderKineticEnergyCore.name=Ender Kinetic Energy Core
+tile.mengy007_kineticraft:kineticBlock.name=Kinetic Block
 tile.mengy007_kineticraft:woodenKineticEnergyCube.name=Wooden Kinetic Energy Cube
 tile.mengy007_kineticraft:stoneKineticEnergyCube.name=Stone Kinetic Energy Cube
 tile.mengy007_kineticraft:ironKineticEnergyCube.name=Iron Kinetic Energy Cube
 tile.mengy007_kineticraft:goldKineticEnergyCube.name=Gold Kinetic Energy Cube
 tile.mengy007_kineticraft:enderKineticEnergyCube.name=Ender Kinetic Energy Cube
 tile.mengy007_kineticraft:kineticEnergyConduit.name=Ender Kinetic Energy Conduit
+tile.mengy007_kineticraft:kineticEnergyGenerator.name=Kinetic Energy Generator
 tile.mengy007_kineticraft:kineticFurnace.name=Kinetic Furnace
 itemGroup.mengy007_kinecticraft=KinectiCraft

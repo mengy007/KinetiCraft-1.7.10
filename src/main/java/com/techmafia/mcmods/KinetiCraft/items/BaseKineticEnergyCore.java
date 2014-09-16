@@ -14,6 +14,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyStorage;
 
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
@@ -288,4 +289,14 @@ public class BaseKineticEnergyCore extends Item implements IEnergyHandler
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	public int getEnergyFromMoving()
+	{
+		return this.energyFromMoving;
+	}
+	
+	public int getEnergyFromJumping()
+	{
+		return this.energyFromJumping;
+	}	
 }
