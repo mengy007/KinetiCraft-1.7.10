@@ -75,9 +75,9 @@ public class EnderKineticEnergyCore extends BaseKineticEnergyCore
 		
 		if ( ! (entityPlayer.worldObj.blockExists(x, y, z) && entityPlayer.worldObj.blockExists(x, y-1, z)) && Math.random() <= 0.25)
 		{
-			entityPlayer.posX = x;
-			entityPlayer.posY = y;
-			entityPlayer.posZ = z;
+			entityPlayer.posX += x;
+			entityPlayer.posY += y;
+			entityPlayer.posZ += z;
 			//entityLiving.playSound("random.teleport", 1, 1);
 			
 			return true;

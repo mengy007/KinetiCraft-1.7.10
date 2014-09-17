@@ -172,6 +172,17 @@ public class KineticEnergyCube extends BlockContainer
         {
         	world.setBlockMetadataWithNotify(x, y, z, 4, 2);
         }
+        
+        if (this.metadata == 5)
+        {
+        	TileEntity te = world.getTileEntity(x, y, z);
+        	
+        	if (te != null && te instanceof EnderKineticEnergyCubeTileEntity)
+        	{
+        		((EnderKineticEnergyCubeTileEntity)te).setOwnerUUID(entity.getUniqueID().toString());
+    			((EnderKineticEnergyCubeTileEntity)te).setOwnerName(((EntityPlayer)entity).getDisplayName());
+        	}
+        }
     }
     
     /**
@@ -217,11 +228,7 @@ public class KineticEnergyCube extends BlockContainer
 		case 4:
 			return new GoldKineticEnergyCubeTileEntity();
 		case 5:
-			EnderKineticEnergyCubeTileEntity te = new EnderKineticEnergyCubeTileEntity();
-			te.setOwnerUUID(Minecraft.getMinecraft().thePlayer.getUniqueID().toString());
-			te.setOwnerName(Minecraft.getMinecraft().thePlayer.getDisplayName());
-			
-			return te;
+			return new EnderKineticEnergyCubeTileEntity();
 		}
 		
 		return null;		

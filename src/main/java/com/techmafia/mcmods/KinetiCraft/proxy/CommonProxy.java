@@ -2,6 +2,7 @@ package com.techmafia.mcmods.KinetiCraft.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 
 import com.techmafia.mcmods.KinetiCraft.tileentities.EnderKineticEnergyCubeTileEntity;
 import com.techmafia.mcmods.KinetiCraft.tileentities.GoldKineticEnergyCubeTileEntity;
@@ -41,4 +42,6 @@ public abstract class CommonProxy implements IProxy
 	public void sendEnderEnergyUpdate(int energyStored, EntityPlayer ep) { }
 	
 	public void drainEnderEnergyUpdate(ItemStack itemStack, int energyStored) { }
+	
+	public void registerExtendedPlayer(EntityConstructing event) { }
 }

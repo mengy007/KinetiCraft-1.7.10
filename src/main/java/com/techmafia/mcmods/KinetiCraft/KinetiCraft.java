@@ -80,9 +80,9 @@ public class KinetiCraft
 	public void init(FMLInitializationEvent event)
 	{
 		/* Register network packet stuff */
-		KinetiCraft.network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
-		KinetiCraft.network.registerMessage(EnderKineticEnergyDataHandler.class, EnderKineticEnergyData.class, 0, Side.CLIENT);
-		KinetiCraft.network.registerMessage(ExtendedPlayerDataHandler.class, ExtendedPlayerData.class, 0, Side.CLIENT);
+		//KinetiCraft.network = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MOD_ID);
+		//KinetiCraft.network.registerMessage(EnderKineticEnergyDataHandler.class, EnderKineticEnergyData.class, 0, Side.CLIENT);
+		//KinetiCraft.network.registerMessage(ExtendedPlayerDataHandler.class, ExtendedPlayerData.class, 0, Side.CLIENT);
 
 		LogHelper.info("Init event complete.");
 	}
