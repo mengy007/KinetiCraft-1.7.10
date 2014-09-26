@@ -87,51 +87,35 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 	
 	public void distributePower()
 	{
-		//LogHelper.info("Power Sources: " + this.powerSources.size());
-		//LogHelper.info("Power Drains: " + this.powerDrains.size());
-		
-		if (this.powerSources != null && this.powerSources.size() > 0 && this.powerDrains != null && this.powerDrains.size() > 0)
+		if (this.powerDrains.size() > 0 && this.energyStored > 0 && this.energyStored > this.powerDrains.size())
 		{
-			//LogHelper.info("Passed null and count tests!");
+			int energyPerDrain = this.energyStored / this.powerDrains.size();
 			
-			int powerSourceIndex = 0;
-			
-			for (Iterator <PowerTile> i = this.powerSources.iterator(); i.hasNext(); powerSourceIndex++)
+			for (Iterator <PowerTile> it = this.powerDrains.iterator(); it.hasNext(); )
 			{
-				PowerTile powerSource = i.next();
+				PowerTile pt = it.next();
+				TileEntity te = pt.te;
 				
-				//Null check
-				if (powerSource.te == null || powerSource.te.getWorldObj().getTileEntity(powerSource.te.xCoord, powerSource.te.yCoord, powerSource.te.zCoord) == null)
+				if (te != null && te instanceof IEnergyHandler && ((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), 1, true) > 0)
 				{
-					this.powerSources.remove(powerSourceIndex);
-					continue;
+					this.energyStored -= ((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), energyPerDrain, false);
 				}
+			}			
+			
+			/*
+			int hungryDrains = 0;
+			int energyPerDrain = 0;
+			
+			for (Iterator <PowerTile> it = this.powerDrains.iterator(); it.hasNext(); )
+			{
+				PowerTile pt = it.next();
+				TileEntity te = pt.te;
 				
-				// Get max energy available
-				int maxEnergyDrainPossible = ((IEnergyHandler)powerSource.te).extractEnergy(powerSource.connectedDir.getOpposite(), this.maxThroughPut, true);
-				
-				//LogHelper.info("Max energy available: " + maxEnergyDrainPossible + ", drains: " + this.powerDrains.size());
-				
-				if (maxEnergyDrainPossible > 0 && this.powerDrains != null && this.powerDrains.size() > 0 && maxEnergyDrainPossible >= this.powerDrains.size())
-				{
-					int energyPerDrainTile = maxEnergyDrainPossible / this.powerDrains.size();
-					int actualEnergyDrained = 0;
-
-					//LogHelper.info("Energy per tile: " + energyPerDrainTile);
-					
-					for (Iterator <PowerTile> i1 = this.powerDrains.iterator(); i1.hasNext(); )
-					{
-						PowerTile pt = i1.next();
-						
-						actualEnergyDrained += ((IEnergyHandler)pt.te).receiveEnergy(pt.connectedDir, energyPerDrainTile, false);
-					}
-					
-					if (actualEnergyDrained > 0)
-					{
-						((IEnergyHandler)powerSource.te).extractEnergy(powerSource.connectedDir.getOpposite(), actualEnergyDrained, false);
-					}
-				}
+				if (((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), 1, true) > 0) hungryDrains++;
 			}
+			
+			energyPerDrain = this.energyStored / hungryDrains;
+			*/
 		}		
 	}
 	
@@ -193,8 +177,10 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 							returnList.add(ni.next());
 						}
 					}
+					
+					//((KineticEnergyConduitTileEntity)tes[i]).updateConduitNetwork();
 				}
-				else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()) && ((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+				else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))// && ((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
 				{
 					// Power drain
 					if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
@@ -202,12 +188,14 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 						returnList.add(new PowerTile(dirs[i], tes[i]));
 					}
 					// Power source
-					/*
 					else if (((IEnergyHandler)tes[i]).extractEnergy(dirs[i].getOpposite(), 1, true) > 0)
 					{
-						tileConnectedToPowerSource = true;
+						//this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), null);
+						
+						//tileConnectedToPowerSource = true;
 						
 						// There must be a smarter way of doing this
+						/*
 						if (this.powerSources.size() > 0)
 						{
 							ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
@@ -220,8 +208,8 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 							}			
 							this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
 						}
+						*/
 					}
-					*/
 				}
 				else
 				{
