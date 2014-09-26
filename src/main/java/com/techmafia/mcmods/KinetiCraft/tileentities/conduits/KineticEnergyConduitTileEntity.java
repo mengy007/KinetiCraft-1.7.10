@@ -3,13 +3,16 @@ package com.techmafia.mcmods.KinetiCraft.tileentities.conduits;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cofh.api.energy.IEnergyHandler;
 
-import com.techmafia.mcmods.KinetiCraft.utility.*;
+import com.techmafia.mcmods.KinetiCraft.utility.BlockPos;
+import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
+import com.techmafia.mcmods.KinetiCraft.utility.PowerTile;
 
-public class KineticEnergyConduitTileEntity extends TileEntity
+public class KineticEnergyConduitTileEntity extends TileEntity implements IEnergyHandler
 {
 	/*
 	 * UP, DOWN, NORTH, EAST, SOUTH, WEST
@@ -18,22 +21,46 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 	private ArrayList <PowerTile> powerSources = new ArrayList <PowerTile>();
 	private ArrayList <PowerTile> powerDrains = new ArrayList <PowerTile>();
 	private int maxThroughPut = 10000;
+	private int energyStored = 0;
 	private boolean firstTick = true;
 		
 	public KineticEnergyConduitTileEntity()	
 	{
 		super();
 	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt)
+	{
+		super.readFromNBT(nbt);
+		
+		if (nbt != null)
+		{
+			this.energyStored = nbt.getInteger("energyStored");
+		}
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound nbt)
+	{
+		super.writeToNBT(nbt);
+		
+		if (nbt != null)
+		{
+			nbt.setInteger("energyStored",	this.energyStored);
+		}
+	}
 	
 	public void updateEntity()
 	{
 		if (this.firstTick)
 		{
-			this.updateConnections();
+			this.updateConduitNetwork();
 			this.firstTick = false;
 		}
 		
-		if (this.powerSources.size() > 0 && this.powerDrains.size() > 0)
+		//if (this.powerSources.size() > 0 && this.powerDrains.size() > 0)
+		if (this.powerDrains.size() > 0 && this.energyStored > 0 && this.energyStored > this.powerDrains.size())
 		{
 			this.distributePower();
 		}
@@ -42,30 +69,30 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 	public void updateConduitNetwork()
 	{
 		this.updateConnections();
-		this.updatePowerSources();
+		//this.updatePowerSources();
 		
-		if (this.powerSources.size() > 0)
-		{
-			ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
+		//if (this.powerSources.size() > 0)
+		//{
+			//ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
 			
 			// Add connected power sources
-			for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
-			{
-				TileEntity te = it.next().te;				
-				checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
-			}			
-			this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
-		}
+			//for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
+			//{
+			//	TileEntity te = it.next().te;				
+			//	checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
+			//}			
+			this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), null);
+		//}
 	}
 	
 	public void distributePower()
 	{
-		LogHelper.info("Power Sources: " + this.powerSources.size());
-		LogHelper.info("Power Drains: " + this.powerDrains.size());
+		//LogHelper.info("Power Sources: " + this.powerSources.size());
+		//LogHelper.info("Power Drains: " + this.powerDrains.size());
 		
 		if (this.powerSources != null && this.powerSources.size() > 0 && this.powerDrains != null && this.powerDrains.size() > 0)
 		{
-			LogHelper.info("Passed null and count tests!");
+			//LogHelper.info("Passed null and count tests!");
 			
 			int powerSourceIndex = 0;
 			
@@ -83,14 +110,14 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 				// Get max energy available
 				int maxEnergyDrainPossible = ((IEnergyHandler)powerSource.te).extractEnergy(powerSource.connectedDir.getOpposite(), this.maxThroughPut, true);
 				
-				LogHelper.info("Max energy available: " + maxEnergyDrainPossible + ", drains: " + this.powerDrains.size());
+				//LogHelper.info("Max energy available: " + maxEnergyDrainPossible + ", drains: " + this.powerDrains.size());
 				
 				if (maxEnergyDrainPossible > 0 && this.powerDrains != null && this.powerDrains.size() > 0 && maxEnergyDrainPossible >= this.powerDrains.size())
 				{
 					int energyPerDrainTile = maxEnergyDrainPossible / this.powerDrains.size();
 					int actualEnergyDrained = 0;
 
-					LogHelper.info("Energy per tile: " + energyPerDrainTile);
+					//LogHelper.info("Energy per tile: " + energyPerDrainTile);
 					
 					for (Iterator <PowerTile> i1 = this.powerDrains.iterator(); i1.hasNext(); )
 					{
@@ -133,6 +160,11 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 		dirs[4] = ForgeDirection.SOUTH;
 		dirs[5] = ForgeDirection.NORTH;
 		
+		if (checkedTiles == null)
+		{
+			checkedTiles = new ArrayList <BlockPos>();
+		}
+		
 		checkedTiles.add(new BlockPos(start.x, start.y, start.z));
 		
 		//LogHelper.info("Checked Tiles Count: " + checkedTiles.size());
@@ -170,6 +202,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 						returnList.add(new PowerTile(dirs[i], tes[i]));
 					}
 					// Power source
+					/*
 					else if (((IEnergyHandler)tes[i]).extractEnergy(dirs[i].getOpposite(), 1, true) > 0)
 					{
 						tileConnectedToPowerSource = true;
@@ -188,6 +221,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 							this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
 						}
 					}
+					*/
 				}
 				else
 				{
@@ -196,6 +230,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 			}
 		}
 		
+		/*
 		if (tileConnectedToPowerSource)
 		{
 			ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
@@ -208,6 +243,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 			}			
 			this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
 		}
+		*/
 		
 		return returnList;
 	}
@@ -287,5 +323,56 @@ public class KineticEnergyConduitTileEntity extends TileEntity
 		if ((firstDir == ForgeDirection.WEST && secondDir == ForgeDirection.EAST) || (firstDir == ForgeDirection.EAST && secondDir == ForgeDirection.WEST)) return true;
 		
 		return false;
+	}
+
+	@Override
+	public boolean canConnectEnergy(ForgeDirection dir) 
+	{
+		return true;
+	}
+
+	@Override
+	public int extractEnergy(ForgeDirection dir, int maxExtract, boolean simulate)
+	{
+		int actualExtract = Math.min(maxExtract, this.energyStored);
+		
+		if ( ! simulate)
+		{
+			this.energyStored -= actualExtract;
+			this.energyStored = Math.min(this.energyStored, 0);
+		}
+		
+		return actualExtract;
+	}
+
+	@Override
+	public int getEnergyStored(ForgeDirection dir)
+	{
+		return this.energyStored;
+	}
+
+	@Override
+	public int getMaxEnergyStored(ForgeDirection dir)
+	{
+		return this.maxThroughPut;
+	}
+
+	@Override
+	public int receiveEnergy(ForgeDirection dir, int maxReceive, boolean simulate)
+	{
+		int actualReceive = 0;
+
+		if (this.powerDrains.size() > 0)
+		{
+			actualReceive = Math.min(maxReceive, (this.maxThroughPut - this.energyStored));
+			
+			if ( ! simulate)
+			{
+				this.energyStored += actualReceive;
+				this.energyStored = Math.max(this.energyStored, this.maxThroughPut);
+			}
+		}
+		
+		return actualReceive;
 	}
 }

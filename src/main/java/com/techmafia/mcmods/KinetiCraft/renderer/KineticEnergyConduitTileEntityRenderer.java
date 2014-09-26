@@ -74,25 +74,25 @@ public class KineticEnergyConduitTileEntityRenderer extends TileEntitySpecialRen
 
 			GL11.glTranslatef(-0.5f, -0.5f, -0.5f);
 			
-			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
-			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
-			tes.addVertexWithUV(9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
-			tes.addVertexWithUV(9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 1-9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 1-9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);
 
-			tes.addVertexWithUV(9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);
-			tes.addVertexWithUV(9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
-			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
-			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 9*this.pixel/2, 		7*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 9*this.pixel/2, 		10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 9*this.pixel/2, 		10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 9*this.pixel/2, 		7*this.texturePixel, 	7*this.texturePixel);
 		
-			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
-			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
-			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
-			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);		
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 9*this.pixel/2, 		7*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 9*this.pixel/2, 		10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	1, 1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(1-9*this.pixel/2, 	0, 1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);		
 
-			tes.addVertexWithUV(9*this.pixel/2, 	0, 					1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);		
-			tes.addVertexWithUV(9*this.pixel/2, 	1, 					1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
-			tes.addVertexWithUV(9*this.pixel/2, 	1, 					9*this.pixel/2, 	10*this.texturePixel, 	7*this.texturePixel);
-			tes.addVertexWithUV(9*this.pixel/2, 	0, 					9*this.pixel/2, 	7*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 1-9*this.pixel/2, 	7*this.texturePixel, 	0*this.texturePixel);		
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 1-9*this.pixel/2, 	10*this.texturePixel, 	0*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	1, 9*this.pixel/2, 		10*this.texturePixel, 	7*this.texturePixel);
+			tes.addVertexWithUV(9*this.pixel/2, 	0, 9*this.pixel/2, 		7*this.texturePixel, 	7*this.texturePixel);
 		}
 		tes.draw();
 		
