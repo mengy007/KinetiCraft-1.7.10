@@ -1,5 +1,7 @@
 package com.techmafia.mcmods.KinetiCraft.blocks.conduits;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -11,6 +13,7 @@ import net.minecraft.world.World;
 import com.techmafia.mcmods.KinetiCraft.creativetab.CreativeTabKC;
 import com.techmafia.mcmods.KinetiCraft.reference.Reference;
 import com.techmafia.mcmods.KinetiCraft.tileentities.conduits.KineticEnergyConduitTileEntity;
+import com.techmafia.mcmods.KinetiCraft.utility.BlockPos;
 import com.techmafia.mcmods.KinetiCraft.utility.LogHelper;
 
 public class KineticEnergyConduit extends BlockContainer
@@ -129,7 +132,11 @@ public class KineticEnergyConduit extends BlockContainer
 		
 		if (te != null && te instanceof KineticEnergyConduitTileEntity)
 		{
-			((KineticEnergyConduitTileEntity)te).updateConduitNetwork();
+			ArrayList <BlockPos> checkedTiles = new ArrayList <BlockPos>();
+			
+			checkedTiles.add(new BlockPos(x, y, z));
+			
+			((KineticEnergyConduitTileEntity)te).forceUpdate(checkedTiles);
 		}
     }
 	
@@ -143,7 +150,10 @@ public class KineticEnergyConduit extends BlockContainer
 		
 		if (te != null && te instanceof KineticEnergyConduitTileEntity)
 		{
-			((KineticEnergyConduitTileEntity)te).updateConduitNetwork();
+			ArrayList <BlockPos> checkedTiles = new ArrayList <BlockPos>();
+			
+			checkedTiles.add(new BlockPos(x, y, z));
+			((KineticEnergyConduitTileEntity)te).forceUpdate(checkedTiles);
 		}
     }
 	
@@ -157,7 +167,10 @@ public class KineticEnergyConduit extends BlockContainer
 		
 		if (te != null && te instanceof KineticEnergyConduitTileEntity)
 		{
-			((KineticEnergyConduitTileEntity)te).updateConduitNetwork();
+			ArrayList <BlockPos> checkedTiles = new ArrayList <BlockPos>();
+			
+			checkedTiles.add(new BlockPos(x, y, z));
+			((KineticEnergyConduitTileEntity)te).forceUpdate(checkedTiles);
 		}
 	}
 }

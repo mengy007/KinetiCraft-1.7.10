@@ -59,35 +59,79 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 			this.firstTick = false;
 		}
 		
-		//if (this.powerSources.size() > 0 && this.powerDrains.size() > 0)
 		if (this.powerDrains.size() > 0 && this.energyStored > 0 && this.energyStored > this.powerDrains.size())
 		{
 			this.distributePower();
 		}
 	}
 	
+	public void forceUpdate(ArrayList <BlockPos> checkedTiles)
+	{
+		TileEntity tes[] = new TileEntity[6];
+		ForgeDirection dirs[] = new ForgeDirection[6];
+		boolean tileConnectedToPowerSource = false;
+		
+		try
+		{
+			this.updateConnections();
+			this.powerDrains.clear();
+			
+			tes[0] = this.worldObj.getTileEntity(this.xCoord-1, this.yCoord, 	this.zCoord); // WEST
+			tes[1] = this.worldObj.getTileEntity(this.xCoord+1, this.yCoord, 	this.zCoord); // EAST
+			tes[2] = this.worldObj.getTileEntity(this.xCoord, 	this.yCoord-1, 	this.zCoord); // DOWN
+			tes[3] = this.worldObj.getTileEntity(this.xCoord, 	this.yCoord+1, 	this.zCoord); // UP
+			tes[4] = this.worldObj.getTileEntity(this.xCoord, 	this.yCoord, 	this.zCoord-1); // SOUTH
+			tes[5] = this.worldObj.getTileEntity(this.xCoord, 	this.yCoord, 	this.zCoord+1); // NORTH
+			
+			dirs[0] = ForgeDirection.WEST;
+			dirs[1] = ForgeDirection.EAST;
+			dirs[2] = ForgeDirection.DOWN;
+			dirs[3] = ForgeDirection.UP;
+			dirs[4] = ForgeDirection.SOUTH;
+			dirs[5] = ForgeDirection.NORTH;
+			
+			for (int i=0; i<tes.length; i++)
+			{
+				if (tes[i] != null)
+				{
+					BlockPos currentTile = new BlockPos(tes[i].xCoord, tes[i].yCoord, tes[i].zCoord);
+
+					if ( ! currentTile.inArrayList(checkedTiles))
+					{
+						//this.worldObj.playSoundEffect((double)tes[i].xCoord + 0.5D, (double)tes[i].yCoord + 0.5D, (double)tes[i].zCoord + 0.5D, "random.door_open", 1.0F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+						checkedTiles.add(currentTile);
+						
+						if (tes[i] instanceof KineticEnergyConduitTileEntity)
+						{
+							((KineticEnergyConduitTileEntity)tes[i]).forceUpdate(checkedTiles);
+						}
+						else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))
+						{
+							tileConnectedToPowerSource = true;
+						}
+					}
+				}
+			}			
+			
+			if (tileConnectedToPowerSource)
+			{
+				this.updateConduitNetwork();
+			}
+		}
+		catch (Exception e)
+		{
+			LogHelper.error(e.toString());
+		}
+	}
+	
 	public void updateConduitNetwork()
 	{
-		this.updateConnections();
-		//this.updatePowerSources();
-		
-		//if (this.powerSources.size() > 0)
-		//{
-			//ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
-			
-			// Add connected power sources
-			//for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
-			//{
-			//	TileEntity te = it.next().te;				
-			//	checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
-			//}			
-			this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), null);
-		//}
+		this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), null);
 	}
 	
 	public void distributePower()
 	{
-		if (this.powerDrains.size() > 0 && this.energyStored > 0 && this.energyStored > this.powerDrains.size())
+		if (this.powerDrains != null && this.powerDrains.size() > 0 && this.energyStored > 0 && this.energyStored > this.powerDrains.size())
 		{
 			int energyPerDrain = this.energyStored / this.powerDrains.size();
 			
@@ -100,22 +144,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 				{
 					this.energyStored -= ((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), energyPerDrain, false);
 				}
-			}			
-			
-			/*
-			int hungryDrains = 0;
-			int energyPerDrain = 0;
-			
-			for (Iterator <PowerTile> it = this.powerDrains.iterator(); it.hasNext(); )
-			{
-				PowerTile pt = it.next();
-				TileEntity te = pt.te;
-				
-				if (((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), 1, true) > 0) hungryDrains++;
-			}
-			
-			energyPerDrain = this.energyStored / hungryDrains;
-			*/
+			}		
 		}		
 	}
 	
@@ -151,11 +180,8 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 		
 		checkedTiles.add(new BlockPos(start.x, start.y, start.z));
 		
-		//LogHelper.info("Checked Tiles Count: " + checkedTiles.size());
-		
 		for (int i=0; i<tes.length; i++)
 		{
-			// Not null and not in checkedList
 			if (tes[i] != null && ! (new BlockPos(tes[i].xCoord, tes[i].yCoord, tes[i].zCoord).inArrayList(checkedTiles)))
 			{
 				if (returnList == null) returnList = new ArrayList <PowerTile>();
@@ -163,8 +189,6 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 				// Tile is conduit
 				if (tes[i] instanceof KineticEnergyConduitTileEntity)
 				{
-					//LogHelper.info("Connected conduit to the " + dirs[i].toString());
-					
 					// Check matching adjacent conduit for more connected conduits and return possible connected power drains
 					ArrayList <PowerTile> newList = new ArrayList <PowerTile>();
 					newList = this.updatePowerDrains(new BlockPos(tes[i].xCoord, tes[i].yCoord, tes[i].zCoord), checkedTiles);
@@ -177,61 +201,17 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 							returnList.add(ni.next());
 						}
 					}
-					
-					//((KineticEnergyConduitTileEntity)tes[i]).updateConduitNetwork();
 				}
-				else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()))// && ((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
+				else if (tes[i] instanceof IEnergyHandler && ((IEnergyHandler)tes[i]).canConnectEnergy(dirs[i].getOpposite()) && ((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
 				{
 					// Power drain
 					if (((IEnergyHandler)tes[i]).receiveEnergy(dirs[i].getOpposite(), 1, true) > 0)
 					{
 						returnList.add(new PowerTile(dirs[i], tes[i]));
 					}
-					// Power source
-					else if (((IEnergyHandler)tes[i]).extractEnergy(dirs[i].getOpposite(), 1, true) > 0)
-					{
-						//this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), null);
-						
-						//tileConnectedToPowerSource = true;
-						
-						// There must be a smarter way of doing this
-						/*
-						if (this.powerSources.size() > 0)
-						{
-							ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
-							
-							// Add connected power sources
-							for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
-							{
-								TileEntity te = it.next().te;				
-								checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
-							}			
-							this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
-						}
-						*/
-					}
-				}
-				else
-				{
-					//Other type of block found
 				}
 			}
 		}
-		
-		/*
-		if (tileConnectedToPowerSource)
-		{
-			ArrayList <BlockPos> checkedList = new ArrayList <BlockPos>();
-			
-			// Add connected power sources
-			for (Iterator <PowerTile> it = this.powerSources.iterator(); it.hasNext(); )
-			{
-				TileEntity te = it.next().te;				
-				checkedList.add(new BlockPos(te.xCoord, te.yCoord, te.zCoord));
-			}			
-			this.powerDrains = this.updatePowerDrains(new BlockPos(this.xCoord, this.yCoord, this.zCoord), checkedList);
-		}
-		*/
 		
 		return returnList;
 	}
