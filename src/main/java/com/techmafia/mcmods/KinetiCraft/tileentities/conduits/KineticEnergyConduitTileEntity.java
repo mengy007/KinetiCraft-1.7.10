@@ -1,6 +1,7 @@
 package com.techmafia.mcmods.KinetiCraft.tileentities.conduits;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,11 +19,13 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 	 * UP, DOWN, NORTH, EAST, SOUTH, WEST
 	 */
 	public ForgeDirection[] connections = new ForgeDirection[6];
+	private Hashtable <ForgeDirection, Boolean> acceptedEnergyFrom = new Hashtable <ForgeDirection, Boolean>();
 	private ArrayList <PowerTile> powerSources = new ArrayList <PowerTile>();
 	private ArrayList <PowerTile> powerDrains = new ArrayList <PowerTile>();
 	private int maxThroughPut = 10000;
 	private int energyStored = 0;
 	private boolean firstTick = true;
+	private boolean drainsFull = false;
 		
 	public KineticEnergyConduitTileEntity()	
 	{
@@ -133,6 +136,7 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 	{
 		if (this.powerDrains != null && this.powerDrains.size() > 0 && this.energyStored > 0 && this.energyStored > this.powerDrains.size())
 		{
+			int totalEnergyOut = 0;
 			int energyPerDrain = this.energyStored / this.powerDrains.size();
 			
 			for (Iterator <PowerTile> it = this.powerDrains.iterator(); it.hasNext(); )
@@ -142,9 +146,22 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 				
 				if (te != null && te instanceof IEnergyHandler && ((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), 1, true) > 0)
 				{
-					this.energyStored -= ((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), energyPerDrain, false);
+					int actualOut = ((IEnergyHandler)te).receiveEnergy(pt.connectedDir.getOpposite(), energyPerDrain, false);
+					
+					totalEnergyOut += actualOut;
+					this.energyStored -= actualOut;
 				}
-			}		
+			}
+			
+			this.drainsFull = totalEnergyOut > 0 ? false : true;
+			
+			// reset acceptedEnergyFrom hashtable
+			this.acceptedEnergyFrom.put(ForgeDirection.NORTH, false);
+			this.acceptedEnergyFrom.put(ForgeDirection.SOUTH, false);
+			this.acceptedEnergyFrom.put(ForgeDirection.WEST, false);
+			this.acceptedEnergyFrom.put(ForgeDirection.EAST, false);
+			this.acceptedEnergyFrom.put(ForgeDirection.UP, false);
+			this.acceptedEnergyFrom.put(ForgeDirection.DOWN, false);
 		}		
 	}
 	
@@ -330,14 +347,23 @@ public class KineticEnergyConduitTileEntity extends TileEntity implements IEnerg
 	{
 		int actualReceive = 0;
 
-		if (this.powerDrains.size() > 0)
+		// Only receive power if their are power drains present, there is currently no energy left in conduit section and drains still want power
+		if (this.powerDrains.size() > 0 && this.energyStored == 0 && ! this.drainsFull)
 		{
 			actualReceive = Math.min(maxReceive, (this.maxThroughPut - this.energyStored));
-			
-			if ( ! simulate)
+						
+			if ( ! simulate && actualReceive > 0)
 			{
-				this.energyStored += actualReceive;
-				this.energyStored = Math.max(this.energyStored, this.maxThroughPut);
+				if (this.acceptedEnergyFrom.get(dir.getOpposite()) == null || ! this.acceptedEnergyFrom.get(dir.getOpposite()))
+				{
+					this.energyStored += actualReceive;
+					this.energyStored = Math.min(this.energyStored, this.maxThroughPut);
+					this.acceptedEnergyFrom.put(dir.getOpposite(), true);
+				}
+				else
+				{
+					return 0;
+				}
 			}
 		}
 		
